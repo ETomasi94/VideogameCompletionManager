@@ -104,43 +104,44 @@
 
             <p>
                 <asp:Label ID="ConsoleSelectionLabel" runat="server">Console di gioco: </asp:Label>
-                <select size="1" id="ConsoleSelection" name="Console di gioco" tabindex="1">
-                    <option value="ANY">Tutte</option>
-                    <option value="PC">PC</option>
-                    <option value="PS1">Sony Playstation</option>
-                    <option value="PS2">Sony Playstation 2</option>
-                    <option value="PS3">Sony Playstation 3</option>
-                    <option value="PS4">Sony Playstation 4</option>
-                    <option value="PS5">Sony Playstation 5</option>
-                    <option value="PSP">Sony Playstation Portable</option>
-                    <option value="PSVITA">Sony Playstation Vita</option>
-                    <option value="NES">Nintendo Entertainment System</option>
-                    <option value="SNES">Super Nintendo Entertainment System</option>
-                    <option value="N64">Nintendo 64</option>
-                    <option value="GC">Nintendo GameCube</option>
-                    <option value="WII">Nintendo WII</option>
-                    <option value="WIIU">Nintendo WII U</option>
-                    <option value="NSWITCH">Nintendo Switch</option>
-                    <option value="GB">Nintendo Game Boy</option>
-                    <option value="GBC">Nintendo Game Boy Color</option>
-                    <option value="GBA">Nintendo Game Boy Advance</option>
-                    <option value="NDS">Nintendo DS</option>
-                    <option value="N3DS">Nintendo 3DS</option>
-                    <option value="SMS">Sega Master System</option>
-                    <option value="SMD">Sega Mega Drive</option>
-                    <option value="SST">Sega Saturn</option>
-                    <option value="SDC">Sega Dreamcast</option>
-                    <option value="SGG">Sega Game Gear</option>
-                    <option value="SMJ">Sega Mega Jet</option>
-                    <option value="SNMD">Sega Nomad</option>
-                    <option value="NGEO">Neo Geo</option>
-                    <option value="ARCADE">Arcade</option>
-                    <option value="XBOX">Microsoft Xbox</option>
-                    <option value="XBOX360">Microsoft Xbox 360</option>
-                    <option value="XBOXONE">Microsoft Xbox One</option>
-                    <option value="XBOXSX">Microsoft Xbox Series X / S</option>
-                    <option value="CELLPHONE">Mobile phone</option>
-                </select>
+
+                <asp:DropDownList ID="ConsoleSelection" name="Console di gioco" size="1" TabIndex="1" AutoPostBack="True" runat="server">
+                    <asp:ListItem Selected="True" Value="ANY">Tutte</asp:ListItem>
+                    <asp:ListItem Value="PC">PC</asp:ListItem>
+                    <asp:ListItem Value="PS1">Sony Playstation</asp:ListItem>
+                    <asp:ListItem Value="PS2">Sony Playstation 2</asp:ListItem>
+                    <asp:ListItem Value="PS3">Sony Playstation 3</asp:ListItem>
+                    <asp:ListItem Value="PS4">Sony Playstation 4</asp:ListItem>
+                    <asp:ListItem Value="PS5">Sony Playstation 5</asp:ListItem>
+                    <asp:ListItem Value="PSP">Sony Playstation Portable</asp:ListItem>
+                    <asp:ListItem Value="PSVITA">Sony Playstation Vita</asp:ListItem>
+                    <asp:ListItem Value="NES">Nintendo Entertainment System</asp:ListItem>
+                    <asp:ListItem Value="SNES">Super Nintendo Entertainment System</asp:ListItem>
+                    <asp:ListItem Value="N64">Nintendo 64</asp:ListItem>
+                    <asp:ListItem Value="GC">Nintendo GameCube</asp:ListItem>
+                    <asp:ListItem Value="WII">Nintendo WII</asp:ListItem>
+                    <asp:ListItem Value="WIIU">Nintendo WII U</asp:ListItem>
+                    <asp:ListItem Value="NSWITCH">Nintendo Switch</asp:ListItem>
+                    <asp:ListItem Value="GB">Nintendo Game Boy</asp:ListItem>
+                    <asp:ListItem Value="GBC">Nintendo Game Boy Color</asp:ListItem>
+                    <asp:ListItem Value="GBA">Nintendo Game Boy Advance</asp:ListItem>
+                    <asp:ListItem Value="NDS">Nintendo DS</asp:ListItem>
+                    <asp:ListItem Value="N3DS">Nintendo 3DS</asp:ListItem>
+                    <asp:ListItem Value="SMS">Sega Master System</asp:ListItem>
+                    <asp:ListItem Value="SMD">Sega Mega Drive</asp:ListItem>
+                    <asp:ListItem Value="SST">Sega Saturn</asp:ListItem>
+                    <asp:ListItem Value="SDC">Sega Dreamcast</asp:ListItem>
+                    <asp:ListItem Value="SGG">Sega Game Gear</asp:ListItem>
+                    <asp:ListItem Value="SMJ">Sega Mega Jet</asp:ListItem>
+                    <asp:ListItem Value="SNMD">Sega Nomad</asp:ListItem>
+                    <asp:ListItem Value="NGEO">Neo Geo</asp:ListItem>
+                    <asp:ListItem Value="ARCADE">Arcade</asp:ListItem>
+                    <asp:ListItem Value="XBOX">Microsoft Xbox</asp:ListItem>
+                    <asp:ListItem Value="XBOX360">Microsoft Xbox 360</asp:ListItem>
+                    <asp:ListItem Value="XBOXONE">Microsoft Xbox One</asp:ListItem>
+                    <asp:ListItem Value="XBOXSX">Microsoft Xbox Series X / S</asp:ListItem>
+                    <asp:ListItem Value="CELLPHONE">Mobile phone</asp:ListItem>
+                </asp:DropDownList>
             </p>
         </div>
 

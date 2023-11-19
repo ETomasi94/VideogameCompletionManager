@@ -9,6 +9,11 @@ public partial class MainPage : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
+        if(!IsPostBack)
+        {
+           SortConsoleDropDownList();
+        }
+        
     }
 
     public void QueryButton_Click(Object sender, EventArgs e)
@@ -66,15 +71,17 @@ public partial class MainPage : System.Web.UI.Page
 
     public void SwitchMode(object sender, EventArgs e)
     {
-        if (ModeCheckbox.Checked)
+        if (!QueryMode())
         {
             CambiaVisibilitaControls(false, TrovaControlsPerClasseCss("QueryExclusive"));
             CambiaVisibilitaControls(true, TrovaControlsPerClasseCss("InsertionExclusive"));
+            RimuoviTutteDaConsoleDropdown();
         }
         else
         {
             CambiaVisibilitaControls(true, TrovaControlsPerClasseCss("QueryExclusive"));
             CambiaVisibilitaControls(false, TrovaControlsPerClasseCss("InsertionExclusive"));
+            AggiungiTutteAConsoleDropDown();
         }
     }
 
@@ -161,6 +168,69 @@ public partial class MainPage : System.Web.UI.Page
     private Boolean EsisteControl(WebControl control)
     {
         return (control != null);
+    }
+
+    private void RimuoviTutteDaConsoleDropdown()
+    {
+        foreach(ListItem item in ConsoleSelection.Items)
+        {
+            if(item.Value.Equals("ANY"))
+            {
+                item.Enabled = false;
+                break;
+            }
+        }
+    }
+
+    private void AggiungiTutteAConsoleDropDown()
+    {
+        foreach (ListItem item in ConsoleSelection.Items)
+        {
+            if (item.Value.Equals("ANY"))
+            {
+                item.Enabled = true;
+                item.Selected = true;
+                break;
+            }
+        }
+    }
+
+    private ListItem ElementoANYConsole()
+    {
+        ListItem item = new ListItem();
+        item.Value = "ANY";
+        item.Text = "Tutte";
+        item.Selected = true;
+
+        return item;
+    }
+
+    private void SortConsoleDropDownList()
+    {
+        List<ListItem> itemList = new List<ListItem>();
+        ListItem anyConsole = null;
+
+        foreach (ListItem item in ConsoleSelection.Items)
+        {
+            if (!item.Value.Equals("ANY"))
+            {
+                itemList.Add(item);
+            }
+            else
+            {
+                anyConsole = item;
+            }
+        }
+
+        itemList.Sort((x,y) => String.Compare(x.Text, y.Text));
+
+        if (anyConsole != null)
+        {
+            itemList.Insert(0, anyConsole);
+        }
+
+        ConsoleSelection.Items.Clear();
+        ConsoleSelection.Items.AddRange(itemList.ToArray());
     }
 
     private Boolean QueryMode()
