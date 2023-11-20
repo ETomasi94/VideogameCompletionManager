@@ -63,21 +63,36 @@
                 <asp:CheckBox ID="MonthInterval" Text="Intervallo" runat="server" CssClass="QueryExclusive" Checked="false" AutoPostBack="true" OnCheckedChanged="MonthInterval_OnCheckedChange" />
             </p>
 
-            <p>
-                <asp:Label ID="DayLabel" runat="server">Giorno di completamento: </asp:Label>
-                <asp:TextBox ID="DayFrom" runat="server" />
-                <asp:TextBox ID="DayTo" Text="A" runat="server" Visible="false" />
-                <asp:CheckBox ID="DayInterval" Text="Intervallo" runat="server" CssClass="QueryExclusive" Checked="false" AutoPostBack="true" OnCheckedChanged="DayInterval_OnCheckedChange" />
-            </p>
+                <p>
+                    <asp:Label ID="DayLabel" runat="server">Giorno di completamento: </asp:Label>
+                    <asp:TextBox ID="DayFrom" runat="server" />
+                    <asp:TextBox ID="DayTo" Text="A" runat="server" Visible="false" />
+                    <asp:CheckBox ID="DayInterval" Text="Intervallo" runat="server" CssClass="QueryExclusive" Checked="false" AutoPostBack="true" OnCheckedChanged="DayInterval_OnCheckedChange" />
+                </p>
+
+                <p>
+                    <asp:Label ID="HourLabel" runat="server">Ora di completamento: </asp:Label>
+                    <asp:TextBox ID="HourFrom" runat="server" />
+                    <asp:TextBox ID="HourTo" Text="A" runat="server" Visible="false" />
+                    <asp:CheckBox ID="HourInterval" Text="Intervallo" runat="server" CssClass="QueryExclusive" Checked="false" AutoPostBack="true" OnCheckedChanged="HourInterval_OnCheckedChange" />
+                </p>
+
+                <p>
+                    <asp:Button ID="ActualDateButton" runat="server" Text="Data ed ora attuali" OnClick="ActualDateButton_Click" AutoPostBack="false" />
+                    <asp:Label ID="TimeFormatLabel" runat="server">Formato di data ed ora: </asp:Label>
+                    <asp:DropDownList ID="TimeFormatSelection" name="Formato data di completamento" size="1" TabIndex="1" AutoPostBack="True" runat="server"></asp:DropDownList>
+                    <asp:Label runat="server" ID="TimeFormatOptionsLabel">Includere i secondi</asp:Label>
+                    <asp:CheckBox runat="server" OnCheckedChanged="CheckSecond_OnCheckedChange" ID="CheckSecond" GroupName="TimeFormatButtons"  />
+                </p>
             </div>
 
             <div id="ReleaseYearAttributes">
-            <p>
-                <asp:Label ID="ReleaseYearLabel" runat="server">Anno di pubblicazione: </asp:Label>
-                <asp:TextBox ID="ReleaseYearFrom" runat="server" />
-                <asp:TextBox ID="ReleaseYearTo" Text="A" runat="server" Visible="false" />
-                <asp:CheckBox ID="ReleaseYearInterval" Text="Intervallo" runat="server" CssClass="QueryExclusive" Checked="false" AutoPostBack="true" OnCheckedChanged="ReleaseYearInterval_OnCheckedChange" />
-            </p>
+                <p>
+                    <asp:Label ID="ReleaseYearLabel" runat="server">Anno di pubblicazione: </asp:Label>
+                    <asp:TextBox ID="ReleaseYearFrom" runat="server" />
+                    <asp:TextBox ID="ReleaseYearTo" Text="A" runat="server" Visible="false" />
+                    <asp:CheckBox ID="ReleaseYearInterval" Text="Intervallo" runat="server" CssClass="QueryExclusive" Checked="false" AutoPostBack="true" OnCheckedChanged="ReleaseYearInterval_OnCheckedChange" />
+                </p>
             </div>
 
             <div id="GameTitleAttributes">

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
@@ -37,6 +38,23 @@ public class ConvalidaEnum
         }
 
         return nomeTrovato;
+    }
+
+    public static List<string> RicavaDescrizioniEnum(Type tipoEnum)
+    {
+        if (!tipoEnum.IsEnum)
+        {
+            throw new ArgumentException("Il tipo in input deve essere una enum");
+        }
+
+        List<string> risultato = new List<string>();
+
+        foreach (Enum value in Enum.GetValues(tipoEnum))
+        {
+            risultato.Add(RicavaNome(value));
+        }
+
+        return risultato;
     }
 
     private static string RicavaNome(Enum value) 

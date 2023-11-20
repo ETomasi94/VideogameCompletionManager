@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -9,16 +10,27 @@ public partial class MainPage : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        if(!IsPostBack)
+        if (!IsPostBack)
         {
-           SortConsoleDropDownList();
+            OrdinaDropDownList(ConsoleSelection);
         }
-        
+
+        ElencaFormatiTemporali();
     }
 
     public void QueryButton_Click(Object sender, EventArgs e)
     {
 
+    }
+
+    public void ActualDateButton_Click(object sender, EventArgs e)
+    {
+        DateTime dateTime = DateTime.Now;
+
+        SettaTextbox(YearFrom, dateTime.Year.ToString());
+        SettaTextbox(MonthFrom, dateTime.Month.ToString());
+        SettaTextbox(DayFrom, dateTime.Day.ToString());
+        SettaTextbox(HourFrom, dateTime.TimeOfDay.ToString());
     }
 
     public void FirstLettersCheckbox_OnCheckedChange(object sender, EventArgs e)
@@ -62,6 +74,13 @@ public partial class MainPage : System.Web.UI.Page
         CambiaVisibilitaControls(DayInterval.Checked, DayTo);
 
         ConfiguraTextbox(DayFrom, DayInterval.Checked, "Da");
+    }
+
+    public void HourInterval_OnCheckedChange(Object sender, EventArgs e)
+    {
+        CambiaVisibilitaControls(HourInterval.Checked, HourTo);
+
+        ConfiguraTextbox(HourFrom, HourInterval.Checked, "Da");
     }
 
     public void InsertionButton_Click(object sender, EventArgs e)
@@ -189,10 +208,11 @@ public partial class MainPage : System.Web.UI.Page
             if (item.Value.Equals("ANY"))
             {
                 item.Enabled = true;
-                item.Selected = true;
                 break;
             }
         }
+
+        ConsoleSelection.SelectedIndex = 0;
     }
 
     private ListItem ElementoANYConsole()
@@ -205,12 +225,23 @@ public partial class MainPage : System.Web.UI.Page
         return item;
     }
 
-    private void SortConsoleDropDownList()
+    private void ElencaFormatiTemporali()
+    {
+        List<string> timePatterns = ConvalidaEnum.RicavaDescrizioniEnum(typeof(TimePatterns));
+        DateTime date = DateTime.Now;
+
+        foreach (string pattern in timePatterns)
+        {
+            TimeFormatSelection.Items.Add(date.ToString(pattern));
+        }
+    }
+
+    private void OrdinaDropDownList(DropDownList dropDownList)
     {
         List<ListItem> itemList = new List<ListItem>();
         ListItem anyConsole = null;
 
-        foreach (ListItem item in ConsoleSelection.Items)
+        foreach (ListItem item in dropDownList.Items)
         {
             if (!item.Value.Equals("ANY"))
             {
@@ -229,8 +260,13 @@ public partial class MainPage : System.Web.UI.Page
             itemList.Insert(0, anyConsole);
         }
 
-        ConsoleSelection.Items.Clear();
-        ConsoleSelection.Items.AddRange(itemList.ToArray());
+        dropDownList.Items.Clear();
+        dropDownList.Items.AddRange(itemList.ToArray());
+    }
+
+    public void CheckSecond_OnCheckedChange(object sender,EventArgs e)
+    {
+
     }
 
     private Boolean QueryMode()
