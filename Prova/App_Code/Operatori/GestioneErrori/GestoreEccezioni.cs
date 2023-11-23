@@ -11,9 +11,8 @@ namespace GameCompletionManager
     {
         public static void StampaEccezione(Exception ex)
         {
-            Debug.WriteLine("ECCEZIONE: " + ex.GetType().ToString());
-            Debug.WriteLine("MESSAGGIO: " + ex.Message);
-            Debug.WriteLine("STACK TRACE: " + ex.StackTrace);
+            CertificaEccezione(ex);
+            StampanteDebug.StampaEccezione(ex);
         }
 
         private static void CertificaEccezione(Exception e)

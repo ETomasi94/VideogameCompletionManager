@@ -224,10 +224,12 @@ namespace GameCompletionManager
 
         private ListItem ElementoANYConsole()
         {
-            ListItem item = new ListItem();
-            item.Value = "ANY";
-            item.Text = "Tutte";
-            item.Selected = true;
+            ListItem item = new ListItem
+            {
+                Value = "ANY",
+                Text = "Tutte",
+                Selected = true
+            };
 
             return item;
         }

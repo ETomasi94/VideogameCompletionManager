@@ -1,30 +1,29 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Drawing;
 
 namespace GameCompletionManager
 {
     static class StampanteDebug
     {
-        readonly static string SPAZIO = " ";
-        readonly static string TAB = "\t";
-        readonly static string RITORNO = "\n";
-        readonly static string DUEPUNTI = ":";
-        readonly static string HYPHEN = "-";
-        readonly static string UNDERSCORE = "_";
-        readonly static string SLASH = "/";
-        readonly static string BACKSLASH = "\\";
+        readonly static string DELIMITER = "-----------------";
 
         private static int CERT = 0;
         private static int LIV = 0;
         private static int MOD = 0;
         private static string TIP = "NON_DEFINITO";
 
-        private static string LogPath = "/Logs";
+        private static DateTime ReportDate;
 
         public static void StampaEccezione(Exception e)
         {
+            string reportHeader = GeneraHeader(e);
+            string reportLog = GeneraLog(e);
 
+            string completeReport = ComponiStringa(DELIMITER, reportHeader, reportLog);
+
+            Stampa(completeReport);
+
+            Reset();
         }
 
 
@@ -48,6 +47,25 @@ namespace GameCompletionManager
             TIP = tip;
         }
 
+        private static string GeneraHeader(Exception e)
+        {
+            ReportDate = DateTime.Now;
+
+            return ComponiStringa("\n",
+                DELIMITER,
+                "DATA ED ORA: " + ReportDate.ToString("G"),
+                "PREVISIONE ECCEZIONE: " + Valore(typeof(Certificati), CERT),
+                "LIVELLO: " + Valore(typeof(Livelli), LIV),
+                "MODULO" + Valore(typeof(Moduli), MOD),
+                "TIPO: " + TIP,
+                "MESSAGGIO: " + e.Message);
+        }
+
+        private static string GeneraLog(Exception e)
+        {
+            return e.StackTrace;
+        }
+
         private static string Valore(Type enumType, int val)
         {
             return Enum.GetName(enumType, val);
@@ -65,6 +83,7 @@ namespace GameCompletionManager
         {
             return string.Join(delimiter, strings);
         }
+
 
         private static void Stampa(string s)
         {
