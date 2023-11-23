@@ -5,7 +5,7 @@ enum TimeFormat
     [Description("YEAR")]
     yyyy,
 
-    [Description("MONTH")]
+    [Description("MONTH_SHORT")]
     MM,
 
     [Description("DAY")]

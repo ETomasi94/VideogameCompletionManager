@@ -1,0 +1,8 @@
+﻿enum Livelli
+{
+    INTERFACCIA_UTENTE,
+    SISTEMA_CENTRALE,
+    DATABASE,
+    ACCESS,
+    EXCEL
+}

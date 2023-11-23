@@ -10,10 +10,20 @@ using System.Web;
 /// </summary>
 public static class GestoreEccezioni
 {
+    private static Boolean debug = true; 
+
     public static void GestisciEccezione(Exception ex)
     {
         Debug.WriteLine("ECCEZIONE: " + ex.GetType().ToString());
         Debug.WriteLine("MESSAGGIO: " + ex.Message);
         Debug.WriteLine("STACK TRACE: " + ex.StackTrace);
+    }
+
+    public static void CertificaEccezione(Exception e)
+    {
+        if(e != null && debug)
+        {
+           
+        }
     }
 }

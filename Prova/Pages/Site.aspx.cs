@@ -26,11 +26,12 @@ public partial class MainPage : System.Web.UI.Page
     public void ActualDateButton_Click(object sender, EventArgs e)
     {
         DateTime dateTime = DateTime.Now;
+        
 
         SettaTextbox(YearFrom, dateTime.Year.ToString());
         SettaTextbox(MonthFrom, dateTime.Month.ToString());
         SettaTextbox(DayFrom, dateTime.Day.ToString());
-        SettaTextbox(HourFrom, dateTime.TimeOfDay.ToString());
+        SettaTextbox(HourFrom, dateTime.TimeOfDay.ToString("d"));
     }
 
     public void FirstLettersCheckbox_OnCheckedChange(object sender, EventArgs e)
@@ -230,9 +231,11 @@ public partial class MainPage : System.Web.UI.Page
         List<string> timePatterns = ConvalidaEnum.RicavaDescrizioniEnum(typeof(TimePatterns));
         DateTime date = DateTime.Now;
 
-        foreach (string pattern in timePatterns)
+        string[] formats = DateTime.Now.GetDateTimeFormats();
+
+        foreach(string format in formats)
         {
-            TimeFormatSelection.Items.Add(date.ToString(pattern));
+            TimeFormatSelection.Items.Add(date.ToString(format));
         }
     }
 
