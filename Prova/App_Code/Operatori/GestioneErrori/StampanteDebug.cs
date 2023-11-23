@@ -57,7 +57,7 @@ namespace GameCompletionManager
                 "PREVISIONE ECCEZIONE: " + Valore(typeof(Certificati), CERT),
                 "LIVELLO: " + Valore(typeof(Livelli), LIV),
                 "MODULO: " + Valore(typeof(Moduli), MOD),
-                "TIPO: " + e.GetType(),
+                "TIPO: " + TIP,
                 "MESSAGGIO: " + e.Message);
         }
 

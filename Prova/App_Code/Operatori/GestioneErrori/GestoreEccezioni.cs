@@ -11,8 +11,14 @@ namespace GameCompletionManager
     {
         public static void StampaEccezione(Exception ex)
         {
+            AnalizzaTipo(ex);
             CertificaEccezione(ex);
             StampanteDebug.StampaEccezione(ex);
+        }
+
+        private static void AnalizzaTipo(Exception e)
+        {
+            StampanteDebug.SetTip(e.GetType().ToString());
         }
 
         private static void CertificaEccezione(Exception e)
