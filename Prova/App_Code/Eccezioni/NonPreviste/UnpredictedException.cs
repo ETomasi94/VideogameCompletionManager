@@ -10,9 +10,6 @@ namespace GameCompletionManager
     {
         public UnpredictedException()
         {
-            //
-            // TODO: aggiungere qui la logica del costruttore
-            //
         }
 
         public UnpredictedException(string message) : base(message)

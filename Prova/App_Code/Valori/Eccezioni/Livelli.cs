@@ -1,8 +1,10 @@
-﻿enum Livelli
+﻿namespace GameCompletionManager
 {
-    INTERFACCIA_UTENTE,
-    SISTEMA_CENTRALE,
-    DATABASE,
-    ACCESS,
-    EXCEL
+    enum Livelli
+    {
+        INTERFACCIA_UTENTE,
+        SISTEMA_CENTRALE,
+        ACCESS,
+        EXCEL
+    }
 }
