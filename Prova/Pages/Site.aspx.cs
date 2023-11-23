@@ -106,11 +106,6 @@ namespace GameCompletionManager
             }
         }
 
-        private void ConfiguraData()
-        {
-            throw new NotImplementedException();
-        }
-
         private WebControl[] TrovaControlsPerClasseCss(string classeCss)
         {
             return Page.Form.Controls.OfType<WebControl>().Where(c => c.CssClass.Equals(classeCss)).ToArray();
@@ -260,11 +255,6 @@ namespace GameCompletionManager
 
             dropDownList.Items.Clear();
             dropDownList.Items.AddRange(itemList.ToArray());
-        }
-
-        public void CheckSecond_OnCheckedChange(object sender, EventArgs e)
-        {
-
         }
 
         private Boolean QueryMode()

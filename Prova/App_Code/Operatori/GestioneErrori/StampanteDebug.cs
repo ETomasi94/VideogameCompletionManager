@@ -19,7 +19,7 @@ namespace GameCompletionManager
             string reportHeader = GeneraHeader(e);
             string reportLog = GeneraLog(e);
 
-            string completeReport = ComponiStringa(DELIMITER, reportHeader, reportLog);
+            string completeReport = ComponiStringa("\n"+DELIMITER+"\n", reportHeader, reportLog);
 
             Stampa(completeReport);
 
@@ -56,8 +56,8 @@ namespace GameCompletionManager
                 "DATA ED ORA: " + ReportDate.ToString("G"),
                 "PREVISIONE ECCEZIONE: " + Valore(typeof(Certificati), CERT),
                 "LIVELLO: " + Valore(typeof(Livelli), LIV),
-                "MODULO" + Valore(typeof(Moduli), MOD),
-                "TIPO: " + TIP,
+                "MODULO: " + Valore(typeof(Moduli), MOD),
+                "TIPO: " + e.GetType(),
                 "MESSAGGIO: " + e.Message);
         }
 
