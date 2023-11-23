@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Site.aspx.cs" Inherits="MainPage" MaintainScrollPositionOnPostback="true" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Site.aspx.cs" Inherits="GameCompletionManager.MainPage" MaintainScrollPositionOnPostback="true" %>
 
 <!DOCTYPE html>
 
@@ -79,10 +79,6 @@
 
                 <p>
                     <asp:Button ID="ActualDateButton" runat="server" Text="Data ed ora attuali" OnClick="ActualDateButton_Click" AutoPostBack="false" />
-                    <asp:Label ID="TimeFormatLabel" runat="server">Formato di data ed ora: </asp:Label>
-                    <asp:DropDownList ID="TimeFormatSelection" name="Formato data di completamento" size="1" TabIndex="1" AutoPostBack="True" runat="server"></asp:DropDownList>
-                    <asp:Label runat="server" ID="TimeFormatOptionsLabel">Includere i secondi</asp:Label>
-                    <asp:CheckBox runat="server" OnCheckedChanged="CheckSecond_OnCheckedChange" ID="CheckSecond" GroupName="TimeFormatButtons"  />
                 </p>
             </div>
 

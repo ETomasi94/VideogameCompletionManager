@@ -1,29 +1,34 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Web;
 
-/// <summary>
-/// Descrizione di riepilogo per Class1
-/// </summary>
-public static class GestoreEccezioni
+
+namespace GameCompletionManager
 {
-    private static Boolean debug = true; 
-
-    public static void GestisciEccezione(Exception ex)
+    /// <summary>
+    /// Descrizione di riepilogo per Class1
+    /// </summary>
+    public static class GestoreEccezioni
     {
-        Debug.WriteLine("ECCEZIONE: " + ex.GetType().ToString());
-        Debug.WriteLine("MESSAGGIO: " + ex.Message);
-        Debug.WriteLine("STACK TRACE: " + ex.StackTrace);
-    }
-
-    public static void CertificaEccezione(Exception e)
-    {
-        if(e != null && debug)
+        public static void StampaEccezione(Exception ex)
         {
-           
+            Debug.WriteLine("ECCEZIONE: " + ex.GetType().ToString());
+            Debug.WriteLine("MESSAGGIO: " + ex.Message);
+            Debug.WriteLine("STACK TRACE: " + ex.StackTrace);
+        }
+
+        private static void CertificaEccezione(Exception e)
+        {
+            if (e != null)
+            {
+                if(e is PredictedException)
+                {
+                    StampanteDebug.SetCert((int)Certificati.PREVISTA);
+                }
+                else
+                {
+                    StampanteDebug.SetCert((int)Certificati.NON_PREVISTA);
+                }
+            }
         }
     }
 }
