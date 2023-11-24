@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
+using System.Configuration;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Diagnostics;
 
 namespace GameCompletionManager
 {
@@ -106,7 +107,7 @@ namespace GameCompletionManager
 
         public void UploadButton_Click(Object sender,EventArgs e)
         {
-
+                Debug.WriteLine(ConfigurationManager.ConnectionStrings["AccessConnection"].ConnectionString);
         }
 
         private WebControl[] TrovaControlsPerClasseCss(string classeCss)

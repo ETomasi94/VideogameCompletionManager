@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System.Data;
 
 namespace GameCompletionManager
 {
@@ -10,6 +8,11 @@ namespace GameCompletionManager
     /// </summary>
     public static class Manager
     {
+        public static DataSet RichiediQuery(string dataProvider,string dataSource)
+        {
+            throw new NotImplementedException();
+        }
+
         public static void SegnalaEccezione(Exception ex)
         {
             GestoreEccezioni.StampaEccezione(ex);

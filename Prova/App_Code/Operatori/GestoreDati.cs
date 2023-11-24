@@ -1,5 +1,6 @@
 ﻿using OpenQA.Selenium.DevTools.V117.FedCm;
 using System;
+using System.Data;
 using System.Data.OleDb;
 
 namespace GameCompletionManager
@@ -11,6 +12,11 @@ namespace GameCompletionManager
     {
         static GestoreDati()
         {
+        }
+
+        public DataSet EseguiQuery()
+        {
+            throw new NotImplementedException();
         }
 
        
