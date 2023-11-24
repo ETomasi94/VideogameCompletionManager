@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Web.UI;
@@ -32,7 +30,7 @@ namespace GameCompletionManager
             SettaTextbox(YearFrom, dateTime.Year.ToString());
             SettaTextbox(MonthFrom, dateTime.Month.ToString());
             SettaTextbox(DayFrom, dateTime.Day.ToString());
-            SettaTextbox(HourFrom, dateTime.Hour.ToString("HH mm"));
+            SettaTextbox(HourFrom, dateTime.Hour.ToString());
         }
 
         public void FirstLettersCheckbox_OnCheckedChange(object sender, EventArgs e)

@@ -173,8 +173,10 @@
         <hr />
 
         <div id="FileInsertionDiv" runat="server">
-                    <asp:Label runat="server" id="FileInsertionLabel" Text="Inserisci un file"></asp:Label>
-                    <p><input runat="server"  id="FileInput"  type="file" placeholder="Nome del file" style="width: 300px" name="fileInput" /><input asp-page-handler="Upload" class="btn" onclick="UploadButton_Click" type="submit" value="Upload" /><span asp-validation-for="FileInput.FormFile"></span></p>
+            <asp:Label runat="server" ID="FileInsertionLabel" Text="Inserisci un file"></asp:Label>
+            <p>
+                <input runat="server" id="FileInput" type="file" placeholder="Nome del file" style="width: 300px" name="fileInput" /><input asp-page-handler="Upload" class="btn" onclick="UploadButton_Click" type="submit" value="Upload" /><span asp-validation-for="FileInput.FormFile"></span>
+            </p>
         </div>
 
         <hr />
