@@ -104,7 +104,7 @@ namespace GameCompletionManager
             }
         }
 
-        public void UploadButton_Click()
+        public void UploadButton_Click(Object sender,EventArgs e)
         {
 
         }

@@ -182,10 +182,62 @@
         <hr />
 
         <div id="ResultTable">
-            <h2>Tabella dei videogiochi</h2>
-            <table border="1" bgcolor="#ffffff" cellspacing="0">
-                <caption><b>Videogiochi</b></caption>
-            </table>
+            <asp:GridView ID="GrigliaVideogiochi" runat="server" AutoGenerateColumns="False"
+                DataKeyNames="id" BackColor="White" BorderColor="White"
+                BorderStyle="Ridge" BorderWidth="2px" CellPadding="3" CellSpacing="1"
+                GridLines="None">
+                <Columns>
+                    <asp:TemplateField HeaderText="ID">
+                        <EditItemTemplate>
+                            <asp:TextBox ID="IDField" runat="server" Text='<%# Bind("ID") %>'></asp:TextBox>
+                        </EditItemTemplate>
+                        <ItemTemplate>
+                            <asp:Label ID="IDContent" runat="server" Text='<%# Bind("ID") %>'></asp:Label>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="Data">
+                        <EditItemTemplate>
+                            <asp:TextBox ID="DataField" runat="server" Text='<%# Bind("Data") %>'></asp:TextBox>
+                        </EditItemTemplate>
+                        <ItemTemplate>
+                            <asp:Label ID="DataContent" runat="server" Text='<%# Bind("Data") %>'></asp:Label>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="Console">
+                        <EditItemTemplate>
+                            <asp:TextBox ID="ConsoleField" runat="server" Text='<%# Bind("Console") %>'></asp:TextBox>
+                        </EditItemTemplate>
+                        <ItemTemplate>
+                            <asp:Label ID="ConsoleContent" runat="server" Text='<%# Bind("Console") %>'></asp:Label>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="Titolo">
+                        <EditItemTemplate>
+                            <asp:TextBox ID="TitoloField" runat="server" Text='<%# Bind("Titolo") %>'></asp:TextBox>
+                        </EditItemTemplate>
+                        <ItemTemplate>
+                            <asp:Label ID="TitoloContent" runat="server" Text='<%# Bind("Titolo") %>'></asp:Label>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="Note">
+                        <EditItemTemplate>
+                            <asp:TextBox ID="NoteField" runat="server" Text='<%# Bind("Note") %>'></asp:TextBox>
+                        </EditItemTemplate>
+                        <ItemTemplate>
+                            <asp:Label ID="NoteContent" runat="server" Text='<%# Bind("Note") %>'></asp:Label>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                </Columns>
+                <FooterStyle BackColor="#C6C3C6" ForeColor="Black" />
+                <HeaderStyle BackColor="#4A3C8C" Font-Bold="True" ForeColor="#E7E7FF" />
+                <PagerStyle BackColor="#C6C3C6" ForeColor="Black" HorizontalAlign="Right" />
+                <RowStyle BackColor="#DEDFDE" ForeColor="Black" />
+                <SelectedRowStyle BackColor="#9471DE" Font-Bold="True" ForeColor="White" />
+                <SortedAscendingCellStyle BackColor="#F1F1F1" />
+                <SortedAscendingHeaderStyle BackColor="#594B9C" />
+                <SortedDescendingCellStyle BackColor="#CAC9C9" />
+                <SortedDescendingHeaderStyle BackColor="#33276A" />
+            </asp:GridView>
         </div>
     </form>
 </body>
