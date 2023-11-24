@@ -12,7 +12,7 @@
     <script src="script.js"></script>
 </head>
 <body>
-    <form id="MainSiteForm" method="post" runat="server" enctype="multipart/form-data">
+    <form id="MainSiteForm" runat="server" enctype="multipart/form-data" method="post">
 
         <h1>Lista dei videogiochi completati</h1>
 
@@ -167,16 +167,26 @@
 
         <p>
             <asp:Button ID="QueryButton" CssClass="QueryExclusive" Text="Inizio Ricerca" OnClick="QueryButton_Click" AutoPostBack="false" runat="server" />
-        </p>
-        <p>
             <asp:Button ID="InsertionButton" CssClass="InsertionExclusive" Text="Inserisci Videogioco" OnClick="InsertionButton_Click" Visible="false" AutoPostBack="false" runat="server" />
         </p>
 
         <hr />
 
+        <div id="InsertionDiv" runat="server">
+            <dl>
+                <dt>
+                    <asp:Label runat="server" for="FileUpload.FormFile" ID="FileInsertionLabel" Text="Inserisci un file"></asp:Label>
+                </dt>
+                <dd>
+                    <span asp-validation-for="FileUpload.FormFile"></span><input asp-for="FileUpload.FormFile" type="file" style="width: 250px" /><input asp-page-handler="Upload" class="btn" type="submit" value="Upload" />
+                </dd>
+            </dl>
+        </div>
+
+
         <div id="FileInsertion">
             <p>
-                <asp:Label runat="server" ID="FileInsertionLabel" Text="Inserisci un file"></asp:Label>
+                
                 <asp:TextBox runat="server" ID="FileInsertionPath" placeholder="Nome del file" OnTextChanged="FileInsertionPath_TextChanged"></asp:TextBox>
                 <asp:Button runat="server" ID="UploadButton" Text="Carica" />
             </p>
