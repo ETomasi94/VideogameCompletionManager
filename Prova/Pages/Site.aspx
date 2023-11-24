@@ -172,24 +172,9 @@
 
         <hr />
 
-        <div id="InsertionDiv" runat="server">
-            <dl>
-                <dt>
-                    <asp:Label runat="server" for="FileUpload.FormFile" ID="FileInsertionLabel" Text="Inserisci un file"></asp:Label>
-                </dt>
-                <dd>
-                    <span asp-validation-for="FileUpload.FormFile"></span><input asp-for="FileUpload.FormFile" type="file" style="width: 250px" /><input asp-page-handler="Upload" class="btn" type="submit" value="Upload" />
-                </dd>
-            </dl>
-        </div>
-
-
-        <div id="FileInsertion">
-            <p>
-                
-                <asp:TextBox runat="server" ID="FileInsertionPath" placeholder="Nome del file" OnTextChanged="FileInsertionPath_TextChanged"></asp:TextBox>
-                <asp:Button runat="server" ID="UploadButton" Text="Carica" />
-            </p>
+        <div id="FileInsertionDiv" runat="server">
+                    <asp:Label runat="server" id="FileInsertionLabel" Text="Inserisci un file"></asp:Label>
+                    <p><input runat="server"  id="FileInput"  type="file" placeholder="Nome del file" style="width: 300px" name="fileInput" /><input asp-page-handler="Upload" class="btn" onclick="UploadButton_Click" type="submit" value="Upload" /><span asp-validation-for="FileInput.FormFile"></span></p>
         </div>
 
         <hr />

@@ -106,6 +106,11 @@ namespace GameCompletionManager
             }
         }
 
+        public void UploadButton_Click()
+        {
+
+        }
+
         private WebControl[] TrovaControlsPerClasseCss(string classeCss)
         {
             return Page.Form.Controls.OfType<WebControl>().Where(c => c.CssClass.Equals(classeCss)).ToArray();
@@ -217,18 +222,6 @@ namespace GameCompletionManager
             ConsoleSelection.SelectedIndex = 0;
         }
 
-        private ListItem ElementoANYConsole()
-        {
-            ListItem item = new ListItem
-            {
-                Value = "ANY",
-                Text = "Tutte",
-                Selected = true
-            };
-
-            return item;
-        }
-
         private void OrdinaDropDownList(DropDownList dropDownList)
         {
             List<ListItem> itemList = new List<ListItem>();
@@ -279,11 +272,6 @@ namespace GameCompletionManager
                     CambiaVisibilitaControl(value, control);
                 }
             }
-        }
-
-        protected void FileInsertionPath_TextChanged(object sender, EventArgs e)
-        {
-
         }
     }
 }
