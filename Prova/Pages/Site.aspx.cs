@@ -280,5 +280,10 @@ namespace GameCompletionManager
                 }
             }
         }
+
+        protected void FileInsertionPath_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

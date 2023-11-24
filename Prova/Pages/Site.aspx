@@ -12,7 +12,7 @@
     <script src="script.js"></script>
 </head>
 <body>
-    <form id="form1" runat="server">
+    <form id="MainSiteForm" method="post" runat="server" enctype="multipart/form-data">
 
         <h1>Lista dei videogiochi completati</h1>
 
@@ -177,7 +177,7 @@
         <div id="FileInsertion">
             <p>
                 <asp:Label runat="server" ID="FileInsertionLabel" Text="Inserisci un file"></asp:Label>
-                <asp:TextBox runat="server" ID="FileInsertionPath" placeholder="Nome del file"></asp:TextBox>
+                <asp:TextBox runat="server" ID="FileInsertionPath" placeholder="Nome del file" OnTextChanged="FileInsertionPath_TextChanged"></asp:TextBox>
                 <asp:Button runat="server" ID="UploadButton" Text="Carica" />
             </p>
         </div>
