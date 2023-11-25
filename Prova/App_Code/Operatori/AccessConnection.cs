@@ -1,4 +1,7 @@
-﻿using System.Data.OleDb;
+﻿using System.Data;
+using System;
+using System.Data.OleDb;
+using System.Data.Common;
 
 namespace GameCompletionManager
 {
@@ -6,19 +9,19 @@ namespace GameCompletionManager
     /// <summary>
     /// Descrizione di riepilogo per Class1
     /// </summary>
-    public class ConnessioneAccess
+    public  class ConnessioneAccess : DbConnection
     {
-        readonly static string PROVIDERTITLE = "Provider";
-        readonly static string DATASOURCETITLE = "Data Source";
+        readonly string PROVIDERTITLE = "Provider";
+        readonly string DATASOURCETITLE = "Data Source";
 
-        private static string provider;
-        private static string dataSource;
-        private static string connectionString;
+        private string provider;
+        private string dataSource;
+        private string connectionString;
 
-        public static OleDbTransaction Transazione;
-        private static bool isInTransaction = false;
+        public OleDbTransaction Transazione;
+        private bool isInTransaction = false;
 
-        public static OleDbConnection connection;
+        public OleDbConnection connection;
 
         public ConnessioneAccess(string dataProvider,string dataSourceName)
         {
@@ -27,51 +30,127 @@ namespace GameCompletionManager
                 SetProvider(dataProvider);
                 SetDataSource(dataSourceName);
 
-                BuildConnectionString();
+                connectionString = BuildConnectionString();
+
+                connection = new OleDbConnection(connectionString);
             }
         }
 
-        public string BuildConnectionString()
+        public bool ApriConnessione()
+        {
+            try
+            {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public  bool ChiudiConnessione()
+        {
+            try
+            {
+                if (connection.State != System.Data.ConnectionState.Closed)
+                {
+                    connection.Close();
+                    Reset();
+                }
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private  string BuildConnectionString()
         {
             return PROVIDERTITLE + "=" + GetProvider() + ";" + DATASOURCETITLE + "=" + GetDataSource();
         }
 
-        public string GetConnectionString()
-        {
-            return connectionString;
-        }
-
-        public void SetProvider(string dataProvider)
+        public  void SetProvider(string dataProvider)
         {
             provider = dataProvider;
         }
 
-        public void SetDataSource(string dataSourceName)
+        public  void SetDataSource(string dataSourceName)
         {
             dataSource = dataSourceName;
         }
 
-        public string GetProvider()
+        public  string GetProvider()
         {
             return provider;
         }
 
-        public string GetDataSource()
+        public  string GetDataSource()
         {
             return dataSource;
         }
 
-        private void SetTransactionState(bool state)
+        private  void SetTransactionState(bool state)
         {
             isInTransaction = state;
         }
 
-        private bool IsInTransactionState()
+        private  bool IsInTransactionState()
         {
             return isInTransaction;
         }
 
-        private bool NonNullParameters(params string[] parameters)
+        public override string ConnectionString
+        {
+            get
+            {
+                return connectionString;
+            }
+
+            set
+            {
+                connectionString = value;
+            }
+        }
+
+        public override string Database
+        {
+            get
+            {
+                return connection.Database;
+            }
+        }
+
+        public override string DataSource
+        {
+            get
+            {
+                return dataSource;
+            }
+        }
+
+        public override string ServerVersion
+        {
+            get
+            {
+                return connection.ServerVersion;
+            }
+        }
+
+        public override ConnectionState State
+        {
+            get
+            {
+                return connection.State;
+            }
+        }
+
+        private  bool NonNullParameters(params string[] parameters)
         { 
             foreach(string parameter in parameters)
             {
@@ -84,7 +163,7 @@ namespace GameCompletionManager
             return true;
         }
 
-        private void Reset()
+        private  void Reset()
         {
             provider = null;
             dataSource = null;
@@ -93,6 +172,34 @@ namespace GameCompletionManager
             isInTransaction = false;
 
             connection = null;
+        }
+
+        public override void Close()
+        {
+            connection.Close();
+        }
+
+        public override void ChangeDatabase(string databaseName)
+        {
+            connection.ChangeDatabase(databaseName);
+        }
+
+        public override void Open()
+        {
+            connection.Open();
+        }
+
+        protected override DbTransaction BeginDbTransaction(IsolationLevel isolationLevel)
+        {
+            Transazione = connection.BeginTransaction();
+            SetTransactionState(true);
+
+            return Transazione;
+        }
+
+        protected override DbCommand CreateDbCommand()
+        {
+            throw new NotImplementedException();
         }
     }
 }
