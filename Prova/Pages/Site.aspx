@@ -51,42 +51,42 @@
             <div id="CompletionDateAttributes">
             <p>
                 <asp:Label ID="YearLabel" runat="server">Anno di completamento: </asp:Label>
-                <asp:TextBox ID="YearFrom" runat="server" />
-                <asp:TextBox ID="YearTo" Text="A" runat="server" Visible="false" />
+                <asp:DropDownList ID="YearFrom" runat="server" />
+                <asp:DropDownList ID="YearTo" runat="server" Visible="false" />
                 <asp:CheckBox ID="YearInterval" Text="Intervallo" runat="server" CssClass="QueryExclusive" Checked="false" AutoPostBack="true" OnCheckedChanged="YearInterval_OnCheckedChange" />
             </p>
 
             <p>
                 <asp:Label ID="MonthLabel" runat="server">Mese di completamento: </asp:Label>
-                <asp:TextBox ID="MonthFrom" runat="server" />
-                <asp:TextBox ID="MonthTo" Text="A" runat="server" Visible="false" />
+                <asp:DropDownList ID="MonthFrom" runat="server" />
+                <asp:DropDownList ID="MonthTo" runat="server" Visible="false" />
                 <asp:CheckBox ID="MonthInterval" Text="Intervallo" runat="server" CssClass="QueryExclusive" Checked="false" AutoPostBack="true" OnCheckedChanged="MonthInterval_OnCheckedChange" />
             </p>
 
                 <p>
                     <asp:Label ID="DayLabel" runat="server">Giorno di completamento: </asp:Label>
-                    <asp:TextBox ID="DayFrom" runat="server" />
-                    <asp:TextBox ID="DayTo" Text="A" runat="server" Visible="false" />
+                    <asp:DropDownList ID="DayFrom" runat="server" />
+                    <asp:DropDownList ID="DayTo" runat="server" Visible="false" />
                     <asp:CheckBox ID="DayInterval" Text="Intervallo" runat="server" CssClass="QueryExclusive" Checked="false" AutoPostBack="true" OnCheckedChanged="DayInterval_OnCheckedChange" />
                 </p>
 
                 <p>
                     <asp:Label ID="HourLabel" runat="server">Ora di completamento: </asp:Label>
-                    <asp:TextBox ID="HourFrom" runat="server" />
-                    <asp:TextBox ID="HourTo" Text="A" runat="server" Visible="false" />
+                    <asp:DropDownList ID="HourFrom" runat="server" />
+                    <asp:DropDownList ID="HourTo" runat="server" Visible="false" />
                     <asp:CheckBox ID="HourInterval" Text="Intervallo" runat="server" CssClass="QueryExclusive" Checked="false" AutoPostBack="true" OnCheckedChanged="HourInterval_OnCheckedChange" />
                 </p>
 
                 <p>
-                    <asp:Button ID="ActualDateButton" runat="server" Text="Data ed ora attuali" OnClick="ActualDateButton_Click" AutoPostBack="false" />
+                    <asp:Button ID="ActualDateButton" runat="server" Text="Data ed ora attuali" CssClass="InsertionExclusive" OnClick="ActualDateButton_Click" AutoPostBack="false" />
                 </p>
             </div>
 
             <div id="ReleaseYearAttributes">
                 <p>
                     <asp:Label ID="ReleaseYearLabel" runat="server">Anno di pubblicazione: </asp:Label>
-                    <asp:TextBox ID="ReleaseYearFrom" runat="server" />
-                    <asp:TextBox ID="ReleaseYearTo" Text="A" runat="server" Visible="false" />
+                    <asp:DropDownList ID="ReleaseYearFrom" runat="server" />
+                    <asp:DropDownList ID="ReleaseYearTo" runat="server" Visible="false" />
                     <asp:CheckBox ID="ReleaseYearInterval" Text="Intervallo" runat="server" CssClass="QueryExclusive" Checked="false" AutoPostBack="true" OnCheckedChanged="ReleaseYearInterval_OnCheckedChange" />
                 </p>
             </div>
@@ -182,7 +182,7 @@
 
         <hr />
 
-        <div id="ResultTable">
+        <div id="ResultTable" style="overflow:scroll">
             <asp:GridView ID="GrigliaVideogiochi" runat="server" AutoGenerateColumns="False"
                 DataKeyNames="id" BackColor="White" BorderColor="White"
                 BorderStyle="Ridge" BorderWidth="2px" CellPadding="3" CellSpacing="1"
