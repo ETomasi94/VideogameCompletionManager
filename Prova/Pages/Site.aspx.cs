@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
 using System.Linq;
-using System.Runtime.Serialization;
+using System.Configuration;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Diagnostics;
+using System.Web;
+using System.IO;
 
 namespace GameCompletionManager
 {
@@ -32,7 +33,7 @@ namespace GameCompletionManager
             SettaTextbox(YearFrom, dateTime.Year.ToString());
             SettaTextbox(MonthFrom, dateTime.Month.ToString());
             SettaTextbox(DayFrom, dateTime.Day.ToString());
-            SettaTextbox(HourFrom, dateTime.Hour.ToString("HH mm"));
+            SettaTextbox(HourFrom, dateTime.Hour.ToString());
         }
 
         public void FirstLettersCheckbox_OnCheckedChange(object sender, EventArgs e)
@@ -103,6 +104,19 @@ namespace GameCompletionManager
                 CambiaVisibilitaControls(true, TrovaControlsPerClasseCss("QueryExclusive"));
                 CambiaVisibilitaControls(false, TrovaControlsPerClasseCss("InsertionExclusive"));
                 AggiungiTutteAConsoleDropDown();
+            }
+        }
+
+        public void UploadButton_Click(Object sender,EventArgs e)
+        {
+            HttpPostedFile inputFile = FileInput.PostedFile;
+
+            if(inputFile != null)
+            {
+                string dataSource = Path.GetFullPath(inputFile.FileName);
+                string provider = "Microsoft.Jet.OLEDB.4.0";
+
+                Manager.RichiediQuery(provider, dataSource);
             }
         }
 
@@ -215,18 +229,6 @@ namespace GameCompletionManager
             }
 
             ConsoleSelection.SelectedIndex = 0;
-        }
-
-        private ListItem ElementoANYConsole()
-        {
-            ListItem item = new ListItem
-            {
-                Value = "ANY",
-                Text = "Tutte",
-                Selected = true
-            };
-
-            return item;
         }
 
         private void OrdinaDropDownList(DropDownList dropDownList)
