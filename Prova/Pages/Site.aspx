@@ -175,7 +175,7 @@
         <div id="FileInsertionDiv" runat="server">
             <asp:Label runat="server" ID="FileInsertionLabel" Text="Inserisci un file"></asp:Label>
             <p>
-                <input runat="server" id="FileInput" type="file" placeholder="Nome del file" style="width: 300px" name="fileInput" /><span asp-validation-for="FileInput.FormFile"></span>
+                <input runat="server" id="FileInput" type="file" name="fileInput" /><span asp-validation-for="FileInput.FormFile"></span>
             </p>
             <p> <asp:Button runat="server" ID="UploadButton" name="Bottone di upload" text="Carica" OnClick="UploadButton_Click" /></p>
         </div>

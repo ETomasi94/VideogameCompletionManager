@@ -115,13 +115,20 @@ namespace GameCompletionManager
 
             if(inputFile != null)
             {
+                string value = FileInput.Value;
                 string dataSource = Path.GetFullPath(inputFile.FileName);
+                string fileName = Path.GetFileName(inputFile.FileName);
+
+                Debug.WriteLine(dataSource + "|" + fileName +"\n" + FileInput.PostedFile.ToString());
+
+                /*
                 string provider = "Microsoft.ACE.OLEDB.12.0";
 
                 DataSet source = Manager.RichiediQuery(provider, dataSource,SqlCommand);
 
                 GrigliaVideogiochi.DataSource = source;
                 GrigliaVideogiochi.DataBind();
+                */
             }
         }
 
