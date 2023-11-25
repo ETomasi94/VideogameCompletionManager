@@ -8,9 +8,9 @@ namespace GameCompletionManager
     /// </summary>
     public static class Manager
     {
-        public static DataSet RichiediQuery(string dataProvider,string dataSource)
+        public static DataSet RichiediQuery(string dataProvider,string dataSource,string SQLCommand)
         {
-            throw new NotImplementedException();
+           return GestoreDati.EseguiQuery(dataProvider, dataSource, SQLCommand);
         }
 
         public static void SegnalaEccezione(Exception ex)

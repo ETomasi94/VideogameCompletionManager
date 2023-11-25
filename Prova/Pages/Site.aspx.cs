@@ -7,6 +7,7 @@ using System.Web.UI.WebControls;
 using System.Diagnostics;
 using System.Web;
 using System.IO;
+using System.Data;
 
 namespace GameCompletionManager
 {
@@ -109,15 +110,17 @@ namespace GameCompletionManager
 
         public void UploadButton_Click(Object sender,EventArgs e)
         {
-            HttpPostedFile inputFile = FileInput.PostedFile;
+            string dbPath = "C:\\Users\\enryr\\Desktop\\Test.accdb";
+            string dataProvider = "Microsoft.ACE.OLEDB.12.0";
+            string SqlCommand = "SELECT * FROM Videogiochi";
 
-            if(inputFile != null)
-            {
-                string dataSource = Path.GetFullPath(inputFile.FileName);
-                string provider = "Microsoft.Jet.OLEDB.4.0";
+                Debug.WriteLine(dbPath);
 
-                Manager.RichiediQuery(provider, dataSource);
-            }
+
+                DataSet source = Manager.RichiediQuery(dataProvider, dbPath,SqlCommand);
+
+                GrigliaVideogiochi.DataSource = source;
+                GrigliaVideogiochi.DataBind();
         }
 
         private WebControl[] TrovaControlsPerClasseCss(string classeCss)
