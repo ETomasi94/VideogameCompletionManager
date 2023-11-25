@@ -5,6 +5,8 @@ using System.Configuration;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Diagnostics;
+using System.Web;
+using System.IO;
 
 namespace GameCompletionManager
 {
@@ -107,7 +109,15 @@ namespace GameCompletionManager
 
         public void UploadButton_Click(Object sender,EventArgs e)
         {
-                Debug.WriteLine(ConfigurationManager.ConnectionStrings["AccessConnection"].ConnectionString);
+            HttpPostedFile inputFile = FileInput.PostedFile;
+
+            if(inputFile != null)
+            {
+                string dataSource = Path.GetFullPath(inputFile.FileName);
+                string provider = "Microsoft.Jet.OLEDB.4.0";
+
+                Manager.RichiediQuery(provider, dataSource);
+            }
         }
 
         private WebControl[] TrovaControlsPerClasseCss(string classeCss)
