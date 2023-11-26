@@ -1,19 +1,7 @@
 ﻿using System.ComponentModel;
 
-enum TipiFile
+enum TipiFileSqlite
 {
-    [Description(".accdb")]
-    ACCDB,
-
-    [Description(".mdb")]
-    MDB,
-
-    [Description(".xls")]
-    XLS,
-
-    [Description(".xlsx")]
-    XLSX,
-
     [Description(".sqlite")]
     SQLITE,
 

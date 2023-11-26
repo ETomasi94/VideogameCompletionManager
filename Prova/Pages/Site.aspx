@@ -52,28 +52,28 @@
             <p>
                 <asp:Label ID="YearLabel" runat="server">Anno di completamento: </asp:Label>
                 <asp:DropDownList ID="YearFrom" runat="server" />
-                <asp:DropDownList ID="YearTo" runat="server" Visible="false" />
+                <asp:DropDownList ID="YearTo" runat="server" CssClass="QueryExclusive" Visible="false" />
                 <asp:CheckBox ID="YearInterval" Text="Intervallo" runat="server" CssClass="QueryExclusive" Checked="false" AutoPostBack="true" OnCheckedChanged="YearInterval_OnCheckedChange" />
             </p>
 
             <p>
                 <asp:Label ID="MonthLabel" runat="server">Mese di completamento: </asp:Label>
                 <asp:DropDownList ID="MonthFrom" runat="server" />
-                <asp:DropDownList ID="MonthTo" runat="server" Visible="false" />
+                <asp:DropDownList ID="MonthTo" runat="server" CssClass="QueryExclusive" Visible="false" />
                 <asp:CheckBox ID="MonthInterval" Text="Intervallo" runat="server" CssClass="QueryExclusive" Checked="false" AutoPostBack="true" OnCheckedChanged="MonthInterval_OnCheckedChange" />
             </p>
 
                 <p>
                     <asp:Label ID="DayLabel" runat="server">Giorno di completamento: </asp:Label>
                     <asp:DropDownList ID="DayFrom" runat="server" />
-                    <asp:DropDownList ID="DayTo" runat="server" Visible="false" />
+                    <asp:DropDownList ID="DayTo" runat="server" CssClass="QueryExclusive" Visible="false" />
                     <asp:CheckBox ID="DayInterval" Text="Intervallo" runat="server" CssClass="QueryExclusive" Checked="false" AutoPostBack="true" OnCheckedChanged="DayInterval_OnCheckedChange" />
                 </p>
 
                 <p>
                     <asp:Label ID="HourLabel" runat="server">Ora di completamento: </asp:Label>
                     <asp:DropDownList ID="HourFrom" runat="server" />
-                    <asp:DropDownList ID="HourTo" runat="server" Visible="false" />
+                    <asp:DropDownList ID="HourTo" runat="server" CssClass="QueryExclusive" Visible="false" />
                     <asp:CheckBox ID="HourInterval" Text="Intervallo" runat="server" CssClass="QueryExclusive" Checked="false" AutoPostBack="true" OnCheckedChanged="HourInterval_OnCheckedChange" />
                 </p>
 
@@ -86,7 +86,7 @@
                 <p>
                     <asp:Label ID="ReleaseYearLabel" runat="server">Anno di pubblicazione: </asp:Label>
                     <asp:DropDownList ID="ReleaseYearFrom" runat="server" />
-                    <asp:DropDownList ID="ReleaseYearTo" runat="server" Visible="false" />
+                    <asp:DropDownList ID="ReleaseYearTo" runat="server" CssClass="QueryExclusive" Visible="false" />
                     <asp:CheckBox ID="ReleaseYearInterval" Text="Intervallo" runat="server" CssClass="QueryExclusive" Checked="false" AutoPostBack="true" OnCheckedChanged="ReleaseYearInterval_OnCheckedChange" />
                 </p>
             </div>
@@ -95,8 +95,8 @@
             <p>
                 <asp:Label ID="TitleLabel" runat="server">Titolo: </asp:Label>
                 <asp:TextBox ID="Title" placeholder="Titolo" runat="server" />
-                <asp:Label ID="FirstLettersLabel" runat="server" Visible="false" >Iniziali: </asp:Label>
-                <asp:TextBox ID="FirstLetters" placeholder="Inizia con" runat="server" Visible="false"> </asp:TextBox>
+                <asp:Label ID="FirstLettersLabel" runat="server" CssClass="QueryExclusive"  Visible="false" >Iniziali: </asp:Label>
+                <asp:TextBox ID="FirstLetters" placeholder="Inizia con" runat="server" CssClass="QueryExclusive" Visible="false"> </asp:TextBox>
                 <asp:CheckBox runat="server" ID="exactMatchCheckBox" Text="Titolo Esatto"  CssClass="QueryExclusive" AutoPostBack="true" OnCheckedChanged="ExactMatchCheckBox_OnCheckedChange" />
                 <asp:CheckBox runat="server" ID="FirstLettersCheckbox" Text="Inizia con" CssClass="QueryExclusive" AutoPostBack="true" OnCheckedChanged="FirstLettersCheckbox_OnCheckedChange" />
             </p>
@@ -156,12 +156,10 @@
             </p>
         </div>
 
-        <asp:Label runat="server" ID="DateOrderLabel" CssClass="QueryExclusive"><h5>Ordinare per data di completamento?</h5></asp:Label>
-
-        <div id="DateOrderRadio">
+        <div id="OrderCriteriaDiv">
             <p>
-                <asp:RadioButton runat="server" CssClass="QueryExclusive" ID="DateOrderYes" Text="SI" GroupName="QueryDateOrder" />
-                <asp:RadioButton runat="server" CssClass="QueryExclusive" ID="DateOrderNo" Text="NO" GroupName="QueryDateOrder" />
+                <asp:Label runat="server" ID="OrderCriteriaLabel" CssClass="QueryExclusive">Ordinare per</asp:Label>
+                <asp:DropDownList runat="server" ID="OrderCriteriaDDL" CssClass="QueryExclusive"></asp:DropDownList>
             </p>
         </div>
 

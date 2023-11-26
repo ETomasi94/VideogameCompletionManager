@@ -10,6 +10,11 @@ public class ConvalidaEnum
     {
     }
 
+    public static string GeneraFunzioneSQL(SQLFunzioniTime SQLFunction,string parameter)
+    {
+        return SQLFunction.ToString() + "(" + parameter + ")";
+    }
+
     public static Boolean Valida(string valueName,Enum inputEnumValue)
     {
         Boolean valoreTrovato = false;
