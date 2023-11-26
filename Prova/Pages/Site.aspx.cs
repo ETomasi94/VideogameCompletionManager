@@ -38,51 +38,89 @@ namespace GameCompletionManager
 
         private string GenerateSqlCommand()
         {
-            StringBuilder stringBuilder = new StringBuilder("SELECT * FROM Videogiochi ORDER BY ID");
+            StringBuilder stringBuilder = new StringBuilder("SELECT * FROM Videogiochi ");
 
-            stringBuilder = GenerateWHEREFromDDL(stringBuilder,YearFrom, YearTo, SQLFunzioniTime.YEAR);
-            stringBuilder = GenerateWHEREFromDDL(stringBuilder,MonthFrom, MonthTo,SQLFunzioniTime.MONTH);
-            stringBuilder = GenerateWHEREFromDDL(stringBuilder,DayFrom,DayTo,SQLFunzioniTime.DAY);
+            stringBuilder = GenerateWHEREDate(RiceviSpunta(YearInterval),stringBuilder,YearFrom, YearTo, SQLFunzioniTime.YEAR);
+            stringBuilder = GenerateWHEREDate(RiceviSpunta(MonthInterval),stringBuilder,MonthFrom, MonthTo,SQLFunzioniTime.MONTH);
+            stringBuilder = GenerateWHEREDate(RiceviSpunta(DayInterval), stringBuilder,DayFrom,DayTo,SQLFunzioniTime.DAY);
+
+            stringBuilder = GenerateWHEREConsole(stringBuilder);
+
+            stringBuilder = GenerateORDERBYFromDDL(stringBuilder);
 
             Debug.WriteLine(stringBuilder.ToString());
 
             return stringBuilder.ToString();
         }
 
-        private StringBuilder GenerateWHEREFromDDL(StringBuilder stringBuilder,DropDownList firstDDL,DropDownList secondDDL,SQLFunzioniTime timeFunction)
+        private StringBuilder GenerateWHEREConsole(StringBuilder stringBuilder)
+        {
+            if(stringBuilder != null && !IsANYSelected(ConsoleSelection))
+            {
+                if (stringBuilder.ToString().Contains("WHERE"))
+                {
+                    return stringBuilder.Append(" and ").Append("Console = "+"'"+ConsoleSelection.SelectedValue+"'"); 
+                }
+                else
+                {
+                    return stringBuilder.Append("WHERE ").Append("Console = "+"'"+ConsoleSelection.SelectedValue+"'"); 
+                }
+            }
+
+            return null;
+        }
+
+        private StringBuilder GenerateWHEREDate(bool IsInterval,StringBuilder stringBuilder,DropDownList firstDDL,DropDownList secondDDL,SQLFunzioniTime timeFunction)
         {
             int timeValue1, timeValue2;
             string timeCriteria = ConvalidaEnum.GeneraFunzioneSQL(timeFunction, "Data");
 
             string result;
 
-            if (IsANYSelected(firstDDL))
+            if (IsInterval)
             {
-                if (!IsANYSelected(secondDDL))
+                if (IsANYSelected(firstDDL))
                 {
-                    timeValue1 = Int32.Parse(secondDDL.SelectedItem.Text);
+                    if (!IsANYSelected(secondDDL))
+                    {
+                        timeValue1 = Int32.Parse(secondDDL.SelectedItem.Value);
 
-                    result = (timeCriteria + " <= " + timeValue1);
+                        result = (timeCriteria + " <= " + timeValue1);
+                    }
+                    else
+                    {
+                        result = String.Empty;
+                    }
                 }
                 else
                 {
-                    result = String.Empty;
+                    if (!IsANYSelected(secondDDL))
+                    {
+                        timeValue1 = Int32.Parse(firstDDL.SelectedItem.Value);
+                        timeValue2 = Int32.Parse(secondDDL.SelectedItem.Value);
+
+                        result = (timeCriteria + " >= " + Math.Min(timeValue1, timeValue2) + " and " + timeCriteria + " <= " + Math.Max(timeValue1, timeValue2));
+                    }
+                    else
+                    {
+                        timeValue1 = Int32.Parse(firstDDL.SelectedItem.Value);
+
+                        result = (timeCriteria + " >= " + timeValue1);
+                    }
                 }
             }
             else
             {
-                if (!IsANYSelected(secondDDL))
+                if (IsANYSelected(firstDDL))
                 {
-                    timeValue1 = Int32.Parse(firstDDL.SelectedItem.Text);
-                    timeValue2 = Int32.Parse(secondDDL.SelectedItem.Text);
-
-                    result = (timeCriteria + " >= " + Math.Min(timeValue1,timeValue2) + " and " + timeCriteria + " <=" + Math.Max(timeValue1,timeValue2));
+                    result = String.Empty;
                 }
                 else
                 {
-                    timeValue1 = Int32.Parse(firstDDL.SelectedItem.Text);
+                    timeValue1 = Int32.Parse(firstDDL.SelectedItem.Value);
+                    Debug.WriteLine(timeValue1);
 
-                    result = (timeCriteria + " >= " + timeValue1);
+                    result = (timeCriteria + " = " + timeValue1);
                 }
             }
 
@@ -103,19 +141,11 @@ namespace GameCompletionManager
             }
         }
 
-        private bool IsANYSelected(params DropDownList[] dropDownLists)
+        private StringBuilder GenerateORDERBYFromDDL(StringBuilder stringBuilder)
         {
-            bool isForAll = true;
+            stringBuilder.Append(" ORDER BY " + OrderCriteriaDDL.SelectedValue);
 
-            foreach(DropDownList dropDownList in dropDownLists )
-            {
-                if (isForAll)
-                {
-                    isForAll = dropDownList.SelectedItem.Value.Equals("ANY");
-                }
-            }
-
-            return isForAll;
+            return stringBuilder;
         }
 
         public void ActualDateButton_Click(object sender, EventArgs e)
@@ -140,26 +170,31 @@ namespace GameCompletionManager
         public void ReleaseYearInterval_OnCheckedChange(object sender, EventArgs e)
         {
             CambiaVisibilitaControls(ReleaseYearInterval.Checked, ReleaseYearTo);
+            SelectANYElement(!ReleaseYearInterval.Checked, ReleaseYearTo);
         }
 
         public void YearInterval_OnCheckedChange(object sender, EventArgs e)
         {
             CambiaVisibilitaControls(YearInterval.Checked, YearTo);
+            SelectANYElement(!YearInterval.Checked, YearTo);
         }
 
         public void MonthInterval_OnCheckedChange(Object sender, EventArgs e)
         {
             CambiaVisibilitaControls(MonthInterval.Checked, MonthTo);
+            SelectANYElement(!MonthInterval.Checked, MonthTo);
         }
 
         public void DayInterval_OnCheckedChange(Object sender, EventArgs e)
         {
             CambiaVisibilitaControls(DayInterval.Checked, DayTo);
+            SelectANYElement(!DayInterval.Checked, DayTo);
         }
 
         public void HourInterval_OnCheckedChange(Object sender, EventArgs e)
         {
             CambiaVisibilitaControls(HourInterval.Checked, HourTo);
+            SelectANYElement(!HourInterval.Checked, HourTo);
         }
 
         public void InsertionButton_Click(object sender, EventArgs e)
@@ -274,7 +309,7 @@ namespace GameCompletionManager
                 {
                     dropDownList.Items.Clear();
 
-                    dropDownList.Items.Add(CreateAnyElement());
+                    dropDownList.Items.Add(CreateANYElement());
 
                     for (int i = annoMin; i <= annoMax; i++)
                     {
@@ -295,7 +330,7 @@ namespace GameCompletionManager
                 {
                     dropDownList.Items.Clear();
 
-                    dropDownList.Items.Add(CreateAnyElement());
+                    dropDownList.Items.Add(CreateANYElement());
 
                     for (int i = 1; i <= 12; i++)
                     {
@@ -317,7 +352,7 @@ namespace GameCompletionManager
                 {
                     dropDownList.Items.Clear();
 
-                    dropDownList.Items.Add(CreateAnyElement());
+                    dropDownList.Items.Add(CreateANYElement());
 
                     for (int i = 1; i <= 31; i++)
                     {
@@ -339,7 +374,7 @@ namespace GameCompletionManager
                 {
                     dropDownList.Items.Clear();
 
-                    dropDownList.Items.Add(CreateAnyElement());
+                    dropDownList.Items.Add(CreateANYElement());
 
                     for (int i = 0; i <= 23; i++)
                     {
@@ -360,9 +395,120 @@ namespace GameCompletionManager
                 if (EsisteControl(dropDownList))
                 {
                     dropDownList.Items.Clear();
-                    dropDownList.Items.Add(CreateAnyElement());
+                    dropDownList.Items.Add(CreateANYElement());
                 }
             }
+        }
+
+        private void RimuoviTutteDaConsoleDropdown()
+        {
+            foreach (ListItem item in ConsoleSelection.Items)
+            {
+                if (item.Value.Equals("ANY"))
+                {
+                    item.Enabled = false;
+                    break;
+                }
+            }
+        }
+
+        private void AggiungiTutteAConsoleDropDown()
+        {
+            foreach (ListItem item in ConsoleSelection.Items)
+            {
+                if (item.Value.Equals("ANY"))
+                {
+                    item.Enabled = true;
+                    break;
+                }
+            }
+
+            ConsoleSelection.SelectedIndex = 0;
+        }
+
+        private void SelectANYElement(bool cond,params DropDownList[] dropDownLists)
+        {
+            if (cond)
+            {
+                foreach (DropDownList dropDownList in dropDownLists)
+                {
+                    if (dropDownList != null && HasANYElement(dropDownList))
+                    {
+                        dropDownList.SelectedValue = "ANY";
+                    }
+                }
+            }
+        }
+
+        private bool IsANYSelected(params DropDownList[] dropDownLists)
+        {
+            bool isForAll = true;
+
+            foreach (DropDownList dropDownList in dropDownLists)
+            {
+                if (isForAll)
+                {
+                    isForAll = dropDownList.SelectedItem.Value.Equals("ANY");
+                }
+            }
+
+            return isForAll;
+        }
+
+        private ListItem CreateANYElement()
+        {
+            ListItem anyItem = new ListItem();
+
+            anyItem.Value = "ANY";
+            anyItem.Text = "Tutti";
+
+            return anyItem;
+        }
+
+        private bool HasANYElement(DropDownList dropDownList)
+        {
+            return dropDownList.Items.FindByValue("ANY") != null;
+        }
+
+        private void OrdinaDropDownList(DropDownList dropDownList)
+        {
+            List<ListItem> itemList = new List<ListItem>();
+            ListItem anyConsole = null;
+
+            foreach (ListItem item in dropDownList.Items)
+            {
+                if (!item.Value.Equals("ANY"))
+                {
+                    itemList.Add(item);
+                }
+                else
+                {
+                    anyConsole = item;
+                }
+            }
+
+            itemList.Sort((x, y) => String.Compare(x.Text, y.Text));
+
+            if (anyConsole != null)
+            {
+                itemList.Insert(0, anyConsole);
+            }
+
+            dropDownList.Items.Clear();
+            dropDownList.Items.AddRange(itemList.ToArray());
+        }
+
+        private DropDownList FirstVisibleDDL(params DropDownList[] dropDownLists)
+        {
+            foreach(DropDownList dropDownList in dropDownLists)
+            {
+                if(dropDownList != null && dropDownList.Visible)
+                {
+                    return dropDownList;
+                }
+            }
+
+            return null;
         }
 
         private void ConfiguraTextbox(TextBox textBox, Boolean testoVisualizzato, string testoDiOutput)
@@ -390,7 +536,7 @@ namespace GameCompletionManager
             label.Text = "";
         }
 
-        private Boolean RiceviSpunta(CheckBox checkBox)
+        private bool RiceviSpunta(CheckBox checkBox)
         {
             return checkBox.Checked;
         }
@@ -443,70 +589,6 @@ namespace GameCompletionManager
         private Boolean EsisteControl(WebControl control)
         {
             return (control != null);
-        }
-
-        private void RimuoviTutteDaConsoleDropdown()
-        {
-            foreach (ListItem item in ConsoleSelection.Items)
-            {
-                if (item.Value.Equals("ANY"))
-                {
-                    item.Enabled = false;
-                    break;
-                }
-            }
-        }
-
-        private void AggiungiTutteAConsoleDropDown()
-        {
-            foreach (ListItem item in ConsoleSelection.Items)
-            {
-                if (item.Value.Equals("ANY"))
-                {
-                    item.Enabled = true;
-                    break;
-                }
-            }
-
-            ConsoleSelection.SelectedIndex = 0;
-        }
-
-        private ListItem CreateAnyElement()
-        {
-            ListItem anyItem = new ListItem();
-
-            anyItem.Value = "ANY";
-            anyItem.Text = "Tutti";
-
-            return anyItem;
-        }
-
-        private void OrdinaDropDownList(DropDownList dropDownList)
-        {
-            List<ListItem> itemList = new List<ListItem>();
-            ListItem anyConsole = null;
-
-            foreach (ListItem item in dropDownList.Items)
-            {
-                if (!item.Value.Equals("ANY"))
-                {
-                    itemList.Add(item);
-                }
-                else
-                {
-                    anyConsole = item;
-                }
-            }
-
-            itemList.Sort((x, y) => String.Compare(x.Text, y.Text));
-
-            if (anyConsole != null)
-            {
-                itemList.Insert(0, anyConsole);
-            }
-
-            dropDownList.Items.Clear();
-            dropDownList.Items.AddRange(itemList.ToArray());
         }
 
         private bool ModifyMode()
