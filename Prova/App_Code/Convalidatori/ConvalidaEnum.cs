@@ -10,9 +10,9 @@ public class ConvalidaEnum
     {
     }
 
-    public static string GeneraFunzioneSQL(SQLFunzioniTime SQLFunction,string parameter)
+    public static string GeneraFunzioneSQL(SQLFunzioniTime SQLFunction,params string[] parameters)
     {
-        return SQLFunction.ToString() + "(" + parameter + ")";
+        return SQLFunction.ToString() + "(" + parameters + ")";
     }
 
     public static Boolean Valida(string valueName,Enum inputEnumValue)

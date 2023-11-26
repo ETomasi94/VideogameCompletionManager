@@ -1,0 +1,5 @@
+﻿enum SQLFunzioniString
+{
+    CONTAINS,
+    LIKE
+}

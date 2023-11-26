@@ -5,7 +5,6 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Data;
 using System.Text;
-using OpenQA.Selenium.DevTools.V117.Network;
 using System.Diagnostics;
 
 namespace GameCompletionManager
@@ -44,6 +43,8 @@ namespace GameCompletionManager
             stringBuilder = GenerateWHEREDate(RiceviSpunta(MonthInterval),stringBuilder,MonthFrom, MonthTo,SQLFunzioniTime.MONTH);
             stringBuilder = GenerateWHEREDate(RiceviSpunta(DayInterval), stringBuilder,DayFrom,DayTo,SQLFunzioniTime.DAY);
 
+            stringBuilder = GenerateWHERETitle(stringBuilder);
+
             stringBuilder = GenerateWHEREConsole(stringBuilder);
 
             stringBuilder = GenerateORDERBYFromDDL(stringBuilder);
@@ -53,17 +54,72 @@ namespace GameCompletionManager
             return stringBuilder.ToString();
         }
 
-        private StringBuilder GenerateWHEREConsole(StringBuilder stringBuilder)
+        private StringBuilder GenerateWHERETitle(StringBuilder stringBuilder)
         {
-            if(stringBuilder != null && !IsANYSelected(ConsoleSelection))
+            if(stringBuilder != null)
             {
-                if (stringBuilder.ToString().Contains("WHERE"))
+                if(Title.Text.Equals(String.Empty))
                 {
-                    return stringBuilder.Append(" and ").Append("Console = "+"'"+ConsoleSelection.SelectedValue+"'"); 
+                    return stringBuilder;
                 }
                 else
                 {
-                    return stringBuilder.Append("WHERE ").Append("Console = "+"'"+ConsoleSelection.SelectedValue+"'"); 
+                    if(RiceviSpunta(exactMatchCheckBox))
+                    {
+                        if (stringBuilder.ToString().Contains("WHERE"))
+                        {
+                            return stringBuilder.Append(" and ").Append("Titolo = " + "'" + Title.Text + "'");
+                        }
+                        else
+                        {
+                            return stringBuilder.Append("WHERE ").Append("Titolo = " + "'" + Title.Text + "'");
+                        }
+                    }
+                    else if(RiceviSpunta(FirstLettersCheckbox))
+                    {
+                        if (stringBuilder.ToString().Contains("WHERE"))
+                        {
+                            return stringBuilder.Append(" and ").Append("lower(Titolo) LIKE " + "'" + Title.Text + "'");
+                        }
+                        else
+                        {
+                            return stringBuilder.Append("WHERE ").Append("lower(Titolo) LIKE " + "'" + Title.Text + "'");
+                        }
+                    }
+                    else
+                    {
+                        if (stringBuilder.ToString().Contains("WHERE"))
+                        {
+                            return stringBuilder.Append(" and ").Append("CONTAINS(Titolo," + "'" + Title.Text + "')");
+                        }
+                        else
+                        {
+                            return stringBuilder.Append("WHERE ").Append("CONTAINS(Titolo," + "'" + Title.Text + "')");
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        private StringBuilder GenerateWHEREConsole(StringBuilder stringBuilder)
+        {
+            if(stringBuilder != null)
+            {
+                if (!IsANYSelected(ConsoleSelection))
+                {
+                    if (stringBuilder.ToString().Contains("WHERE"))
+                    {
+                        return stringBuilder.Append(" and ").Append("Console = " + "'" + ConsoleSelection.SelectedValue + "'");
+                    }
+                    else
+                    {
+                        return stringBuilder.Append("WHERE ").Append("Console = " + "'" + ConsoleSelection.SelectedValue + "'");
+                    }
+                }
+                else
+                {
+                    return stringBuilder;
                 }
             }
 
@@ -155,13 +211,11 @@ namespace GameCompletionManager
 
         public void FirstLettersCheckbox_OnCheckedChange(object sender, EventArgs e)
         {
-            CambiaVisibilitaControls(!FirstLettersCheckbox.Checked, Title, TitleLabel, exactMatchCheckBox);
-            CambiaVisibilitaControls(FirstLettersCheckbox.Checked, FirstLettersLabel, FirstLetters);
+            ConfiguraLabel(TitleLabel, RiceviSpunta(FirstLettersCheckbox), "Iniziali del titolo: ", "Titolo: ");
         }
 
         public void ExactMatchCheckBox_OnCheckedChange(object sender, EventArgs e)
         {
-            CambiaVisibilitaControls(false, FirstLetters, FirstLettersLabel);
             CambiaVisibilitaControls(!exactMatchCheckBox.Checked, FirstLettersCheckbox);
 
             ConfiguraLabel(TitleLabel, exactMatchCheckBox.Checked, "Titolo esatto: ", "Titolo: ");
@@ -224,11 +278,11 @@ namespace GameCompletionManager
             CambiaVisibilitaControls(DayInterval.Checked, DayTo);
             CambiaVisibilitaControls(HourInterval.Checked, HourTo);
 
-            CambiaVisibilitaControls(false, FirstLetters, FirstLettersLabel);
+            CambiaVisibilitaControls(false,FirstLettersLabel);
             CambiaVisibilitaControls(!exactMatchCheckBox.Checked, FirstLettersCheckbox);
 
             CambiaVisibilitaControls(!FirstLettersCheckbox.Checked, Title, TitleLabel, exactMatchCheckBox);
-            CambiaVisibilitaControls(FirstLettersCheckbox.Checked, FirstLettersLabel, FirstLetters);
+            CambiaVisibilitaControls(FirstLettersCheckbox.Checked, FirstLettersLabel);
 
             ConfiguraLabel(TitleLabel, exactMatchCheckBox.Checked, "Titolo esatto: ", "Titolo: ");
 

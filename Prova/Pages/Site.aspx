@@ -96,7 +96,6 @@
                 <asp:Label ID="TitleLabel" runat="server">Titolo: </asp:Label>
                 <asp:TextBox ID="Title" placeholder="Titolo" runat="server" />
                 <asp:Label ID="FirstLettersLabel" runat="server" CssClass="QueryExclusive"  Visible="false" >Iniziali: </asp:Label>
-                <asp:TextBox ID="FirstLetters" placeholder="Inizia con" runat="server" CssClass="QueryExclusive" Visible="false"> </asp:TextBox>
                 <asp:CheckBox runat="server" ID="exactMatchCheckBox" Text="Titolo Esatto"  CssClass="QueryExclusive" AutoPostBack="true" OnCheckedChanged="ExactMatchCheckBox_OnCheckedChange" />
                 <asp:CheckBox runat="server" ID="FirstLettersCheckbox" Text="Inizia con" CssClass="QueryExclusive" AutoPostBack="true" OnCheckedChanged="FirstLettersCheckbox_OnCheckedChange" />
             </p>
