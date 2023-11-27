@@ -5,7 +5,6 @@ using System.Data.Common;
 
 namespace GameCompletionManager
 {
-
     /// <summary>
     /// Descrizione di riepilogo per Class1
     /// </summary>
@@ -57,7 +56,7 @@ namespace GameCompletionManager
         {
             try
             {
-                if (connection.State != System.Data.ConnectionState.Closed)
+                if (connection.State != ConnectionState.Closed)
                 {
                     connection.Close();
                     Reset();
