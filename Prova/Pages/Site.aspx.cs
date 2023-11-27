@@ -43,7 +43,7 @@ namespace GameCompletionManager
 
         public void FirstLettersCheckbox_OnCheckedChange(object sender, EventArgs e)
         {
-            ConfiguraLabel(TitleLabel, RiceviSpunta(FirstLettersCheckbox), "Iniziali del titolo: ", "Titolo: ");
+            ConfiguraLabel(TitleLabel, Checked(FirstLettersCheckbox), "Iniziali del titolo: ", "Titolo: ");
         }
 
         public void ExactMatchCheckBox_OnCheckedChange(object sender, EventArgs e)
@@ -120,9 +120,9 @@ namespace GameCompletionManager
             char[] separators = new char[] { ',', '.', '\\', '/', ' ' };
             StringBuilder stringBuilder = new StringBuilder("SELECT * FROM Videogiochi ");
 
-            stringBuilder = GenerateWHEREDate(RiceviSpunta(YearInterval), stringBuilder, YearFrom, YearTo, SQLFunzioniTime.YEAR);
-            stringBuilder = GenerateWHEREDate(RiceviSpunta(MonthInterval), stringBuilder, MonthFrom, MonthTo, SQLFunzioniTime.MONTH);
-            stringBuilder = GenerateWHEREDate(RiceviSpunta(DayInterval), stringBuilder, DayFrom, DayTo, SQLFunzioniTime.DAY);
+            stringBuilder = GenerateWHEREDate(Checked(YearInterval), stringBuilder, YearFrom, YearTo, SQLFunzioniTime.YEAR);
+            stringBuilder = GenerateWHEREDate(Checked(MonthInterval), stringBuilder, MonthFrom, MonthTo, SQLFunzioniTime.MONTH);
+            stringBuilder = GenerateWHEREDate(Checked(DayInterval), stringBuilder, DayFrom, DayTo, SQLFunzioniTime.DAY);
 
             stringBuilder = GenerateWHERETitle(stringBuilder);
 
@@ -161,7 +161,7 @@ namespace GameCompletionManager
                     }
                 }
 
-                if (RiceviSpunta(completionCheckBox))
+                if (Checked(completionCheckBox))
                 {
                     if (stringBuilder.ToString().Contains("WHERE"))
                     {
@@ -190,7 +190,7 @@ namespace GameCompletionManager
                 }
                 else
                 {
-                    if (RiceviSpunta(exactMatchCheckBox))
+                    if (Checked(exactMatchCheckBox))
                     {
                         if (stringBuilder.ToString().Contains("WHERE"))
                         {
@@ -201,7 +201,7 @@ namespace GameCompletionManager
                             return stringBuilder.Append("WHERE ").Append("Titolo = " + "'" + Title.Text + "'");
                         }
                     }
-                    else if (RiceviSpunta(FirstLettersCheckbox))
+                    else if (Checked(FirstLettersCheckbox))
                     {
                         if (stringBuilder.ToString().Contains("WHERE"))
                         {
@@ -547,9 +547,14 @@ namespace GameCompletionManager
         }
 
         //CHECKBOXES
-        private bool RiceviSpunta(CheckBox checkBox)
+        private bool Checked(CheckBox checkBox)
         {
             return checkBox.Checked;
+        }
+
+        private bool Unchecked(CheckBox checkBox)
+        {
+            return !checkBox.Checked;
         }
 
         //LABELS
@@ -670,18 +675,18 @@ namespace GameCompletionManager
             CambiaVisibilitaControls(true, TrovaControlsPerClasseCss("QueryExclusive"));
             CambiaVisibilitaControls(false, TrovaControlsPerClasseCss("InsertionExclusive"));
 
-            CambiaVisibilitaControls(YearInterval.Checked, YearTo);
-            CambiaVisibilitaControls(MonthInterval.Checked, MonthTo);
-            CambiaVisibilitaControls(DayInterval.Checked, DayTo);
-            CambiaVisibilitaControls(HourInterval.Checked, HourTo);
+            CambiaVisibilitaControls(Checked(YearInterval), YearTo);
+            CambiaVisibilitaControls(Checked(MonthInterval), MonthTo);
+            CambiaVisibilitaControls(Checked(DayInterval), DayTo);
+            CambiaVisibilitaControls(Checked(HourInterval), HourTo);
 
             CambiaVisibilitaControls(false, FirstLettersLabel);
-            CambiaVisibilitaControls(!exactMatchCheckBox.Checked, FirstLettersCheckbox);
+            CambiaVisibilitaControls(Unchecked(exactMatchCheckBox), FirstLettersCheckbox);
 
-            CambiaVisibilitaControls(!FirstLettersCheckbox.Checked, Title, TitleLabel, exactMatchCheckBox);
-            CambiaVisibilitaControls(FirstLettersCheckbox.Checked, FirstLettersLabel);
+            CambiaVisibilitaControls(Unchecked(FirstLettersCheckbox), Title, TitleLabel, exactMatchCheckBox);
+            CambiaVisibilitaControls(Checked(FirstLettersCheckbox), FirstLettersLabel);
 
-            ConfiguraLabel(TitleLabel, exactMatchCheckBox.Checked, "Titolo esatto: ", "Titolo: ");
+            ConfiguraLabel(TitleLabel, Checked(exactMatchCheckBox), "Titolo esatto: ", "Titolo: ");
 
             AggiungiTutteAConsoleDropDown();
         }
@@ -754,7 +759,7 @@ namespace GameCompletionManager
             }
             else
             {
-                return null;
+                throw new NullUIParameterException("Il parametro \"classeCss\" non è valido");
             }
         }
 
