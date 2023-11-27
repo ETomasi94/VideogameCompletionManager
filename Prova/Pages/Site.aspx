@@ -27,10 +27,10 @@
 
         <hr />
 
-        <h2>Questa è una lista dei videogiochi completati dal 2017 al 2023, memorizzati includento:</h2>
+        <h2>Gestore per liste di videogiochi, memorizzati includendo:</h2>
 
         <ul>
-            <li>ID sequenziale del videogioco (in ordine di completamento)</li>
+            <li>ID sequenziale del videogioco</li>
             <li>Data ed ora del completamento</li>
             <li>Console su cui è stato completato il videogioco</li>
             <li>Titolo del videogioco</li>
@@ -39,7 +39,7 @@
 
         <hr />
 
-        <h4>Ricerca all'interno della tabella (da implementare)</h4>
+        <h4><asp:Label runat="server" ID="ModeLabel">Ricerca all'interno del database</asp:Label></h4>
 
         <div id="SearchAttributes">
 
@@ -78,7 +78,7 @@
                 </p>
 
                 <p>
-                    <asp:Button ID="ActualDateButton" runat="server" Text="Data ed ora attuali" CssClass="InsertionExclusive" OnClick="ActualDateButton_Click" AutoPostBack="false" />
+                    <asp:Button ID="ActualDateButton" runat="server" Text="Data ed ora attuali" CssClass="InsertionExclusive" Visible="false" OnClick="ActualDateButton_Click" AutoPostBack="false" />
                 </p>
             </div>
 
@@ -165,6 +165,8 @@
         <p>
             <asp:Button ID="QueryButton" CssClass="QueryExclusive" Text="Inizio Ricerca" OnClick="QueryButton_Click" AutoPostBack="false" runat="server" />
             <asp:Button ID="InsertionButton" CssClass="InsertionExclusive" Text="Inserisci Videogioco" OnClick="InsertionButton_Click" Visible="false" AutoPostBack="false" runat="server" />
+            <asp:Button ID="CompletionStatingStart" CssClass="InsertionExclusive" Text="Registra in tempo reale" OnClick="CompletionStatingStart_Click" Visible="true" AutoPostBack="true" runat="server" />
+            <asp:Label ID="StatingLabel" CssClass="InsertionExclusive" runat="server"></asp:Label>
         </p>
 
         <hr />

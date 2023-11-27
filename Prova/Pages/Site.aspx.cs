@@ -6,7 +6,6 @@ using System.Web.UI.WebControls;
 using System.Data;
 using System.Text;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
 
 namespace GameCompletionManager
 {
@@ -22,6 +21,11 @@ namespace GameCompletionManager
                 RiempiDropDownListGiorni(DayFrom, DayTo);
                 RiempiDropDownListOre(HourFrom, HourTo);
             }
+        }
+
+        protected void CompletionStatingStart_Click(object sender, EventArgs e)
+        {
+            SettaLabel(StatingLabel, "Decidi una combinazione di tasti");
         }
 
         public void QueryButton_Click(Object sender, EventArgs e)

@@ -1,10 +1,7 @@
-﻿using OpenQA.Selenium.DevTools.V117.FedCm;
-using System;
+﻿using System;
 using System.Data;
 using System.Data.OleDb;
-using System.Data.SqlClient;
-using System.Text;
-using System.Web.UI;
+
 
 namespace GameCompletionManager
 {
@@ -13,6 +10,7 @@ namespace GameCompletionManager
     /// </summary>
     public static class GestoreDati
     {
+
         public static DataSet EseguiQuery(string dataProvider,string dataSource,string SQLCommand)
         {
             DataSet queryResult = new DataSet();
