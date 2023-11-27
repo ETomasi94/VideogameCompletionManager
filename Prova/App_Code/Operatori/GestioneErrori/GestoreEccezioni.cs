@@ -13,6 +13,8 @@ namespace GameCompletionManager
         {
             AnalizzaTipo(ex);
             CertificaEccezione(ex);
+            ConvalidaLivello(ex);
+
             StampanteDebug.StampaEccezione(ex);
         }
 
@@ -23,7 +25,7 @@ namespace GameCompletionManager
 
         private static void CertificaEccezione(Exception e)
         {
-            if (e != null)
+            if (Exists(e))
             {
                 if(e is PredictedException)
                 {
@@ -34,6 +36,34 @@ namespace GameCompletionManager
                     StampanteDebug.SetCert((int)Certificati.NON_PREVISTA);
                 }
             }
+        }
+
+        private static void ConvalidaLivello(Exception e)
+        {
+            if(Exists(e)) 
+            {
+                if(e is DatabaseException || e is UnpredictedDatabaseException)
+                {
+                    StampanteDebug.SetLiv((int)Livelli.ACCESS);
+                }
+                else if(e is UserInterfaceException ||  e is UnpredictedUIException)
+                {
+                    StampanteDebug.SetLiv((int)Livelli.INTERFACCIA_UTENTE);
+                }
+                else if(e is SystemException || e is UnpredictedSystemException)
+                {
+                    StampanteDebug.SetLiv((int)Livelli.SISTEMA_CENTRALE);
+                }
+                else
+                {
+                    StampanteDebug.SetLiv((int)Livelli.NON_IDENTIFICATO);
+                }
+            }
+        }
+
+        private static bool Exists(Exception e)
+        {
+            return e != null;
         }
     }
 }

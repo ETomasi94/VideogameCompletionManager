@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace GameCompletionManager
 {
-    public class ConvalidaEnum
+    public static class ConvalidaEnum
     {
         static ConvalidaEnum()
         {

@@ -146,7 +146,7 @@ namespace GameCompletionManager
         {
             if (stringBuilder != null)
             {
-                if (!CompletionNotesTextBox.Text.Equals(String.Empty))
+                if (!RiceviTesto(CompletionNotesTextBox).Equals(String.Empty))
                 {
                     foreach (string note in notes)
                     {
