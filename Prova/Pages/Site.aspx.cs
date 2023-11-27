@@ -6,6 +6,7 @@ using System.Web.UI.WebControls;
 using System.Data;
 using System.Text;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace GameCompletionManager
 {
@@ -37,6 +38,7 @@ namespace GameCompletionManager
 
         private string GenerateSqlCommand()
         {
+            char[] separators = new char[] {',', '.', '\\', '/', ' '};
             StringBuilder stringBuilder = new StringBuilder("SELECT * FROM Videogiochi ");
 
             stringBuilder = GenerateWHEREDate(RiceviSpunta(YearInterval),stringBuilder,YearFrom, YearTo, SQLFunzioniTime.YEAR);
@@ -45,6 +47,13 @@ namespace GameCompletionManager
 
             stringBuilder = GenerateWHERETitle(stringBuilder);
 
+            stringBuilder = GenerateWHERENotes(stringBuilder,CompletionNotesTextBox.Text.Split(separators,StringSplitOptions.RemoveEmptyEntries).ToArray());
+
+            foreach (string note in CompletionNotesTextBox.Text.Split(separators, StringSplitOptions.RemoveEmptyEntries).ToArray())
+            {
+                Debug.WriteLine(note);
+            }
+
             stringBuilder = GenerateWHEREConsole(stringBuilder);
 
             stringBuilder = GenerateORDERBYFromDDL(stringBuilder);
@@ -52,6 +61,44 @@ namespace GameCompletionManager
             Debug.WriteLine(stringBuilder.ToString());
 
             return stringBuilder.ToString();
+        }
+
+        private StringBuilder GenerateWHERENotes(StringBuilder stringBuilder,params string[] notes)
+        {
+            if (stringBuilder != null)
+            {
+                if (!CompletionNotesTextBox.Text.Equals(String.Empty))
+                {
+                    foreach (string note in notes)
+                    {
+                        if (stringBuilder.ToString().Contains("WHERE"))
+                        {
+                            stringBuilder.Append(" and ").Append("Note LIKE " + "'%" + note + "%'");
+                        }
+                        else
+                        {
+                            stringBuilder.Append("WHERE ").Append("Note LIKE  " + "'%" + note + "%'");
+                        }
+                    }
+                }
+
+                if (RiceviSpunta(completionCheckBox))
+                {
+                    if (stringBuilder.ToString().Contains("WHERE"))
+                    {
+                        return stringBuilder.Append(" and ").Append("Note LIKE " + "'%100%'");
+                    }
+                    else
+                    {
+                        return stringBuilder.Append("WHERE ").Append("Note LIKE " + "'%100%'");
+                    }
+                }
+                else
+                {
+                    return stringBuilder;
+                }
+            }
+            return null;
         }
 
         private StringBuilder GenerateWHERETitle(StringBuilder stringBuilder)
@@ -79,22 +126,22 @@ namespace GameCompletionManager
                     {
                         if (stringBuilder.ToString().Contains("WHERE"))
                         {
-                            return stringBuilder.Append(" and ").Append("lower(Titolo) LIKE " + "'" + Title.Text + "'");
+                            return stringBuilder.Append(" and ").Append("Titolo LIKE " + "'" + Title.Text + "%'");
                         }
                         else
                         {
-                            return stringBuilder.Append("WHERE ").Append("lower(Titolo) LIKE " + "'" + Title.Text + "'");
+                            return stringBuilder.Append("WHERE ").Append("Titolo LIKE " + "'" + Title.Text + "%'");
                         }
                     }
                     else
                     {
                         if (stringBuilder.ToString().Contains("WHERE"))
                         {
-                            return stringBuilder.Append(" and ").Append("CONTAINS(Titolo," + "'" + Title.Text + "')");
+                            return stringBuilder.Append(" and ").Append("Titolo LIKE " + "'%" + Title.Text + "%'");
                         }
                         else
                         {
-                            return stringBuilder.Append("WHERE ").Append("CONTAINS(Titolo," + "'" + Title.Text + "')");
+                            return stringBuilder.Append("WHERE ").Append("Titolo LIKE " + "'%" + Title.Text + "%'");
                         }
                     }
                 }
@@ -129,7 +176,7 @@ namespace GameCompletionManager
         private StringBuilder GenerateWHEREDate(bool IsInterval,StringBuilder stringBuilder,DropDownList firstDDL,DropDownList secondDDL,SQLFunzioniTime timeFunction)
         {
             int timeValue1, timeValue2;
-            string timeCriteria = ConvalidaEnum.GeneraFunzioneSQL(timeFunction, "Data");
+            string timeCriteria = ConvalidaEnum.GeneraFunzioneSQL(timeFunction,"Data");
 
             string result;
 

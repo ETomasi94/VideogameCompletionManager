@@ -109,7 +109,7 @@
             </div>
 
             <p>
-                <asp:CheckBox runat="server" ID="completionCheckBox" Text="Completamento al 100%:"></asp:CheckBox>
+                <asp:CheckBox runat="server" ID="completionCheckBox" Text="Completamento al 100%"></asp:CheckBox>
             </p>
 
             <p>

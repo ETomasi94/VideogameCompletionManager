@@ -12,7 +12,7 @@ public class ConvalidaEnum
 
     public static string GeneraFunzioneSQL(SQLFunzioniTime SQLFunction,params string[] parameters)
     {
-        return SQLFunction.ToString() + "(" + parameters + ")";
+        return SQLFunction.ToString() + "(" + parameters[0] + ")";
     }
 
     public static Boolean Valida(string valueName,Enum inputEnumValue)
