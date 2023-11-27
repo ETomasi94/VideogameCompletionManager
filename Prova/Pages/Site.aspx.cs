@@ -17,7 +17,7 @@ namespace GameCompletionManager
             if (!IsPostBack)
             {
                 OrdinaDropDownList(ConsoleSelection);
-                ResettaDropDownList(YearFrom,YearTo);
+                ResettaDropDownList(YearFrom, YearTo);
                 RiempiDropDownListMesi(MonthFrom, MonthTo);
                 RiempiDropDownListGiorni(DayFrom, DayTo);
                 RiempiDropDownListOre(HourFrom, HourTo);
@@ -34,221 +34,6 @@ namespace GameCompletionManager
 
             GrigliaVideogiochi.DataSource = source;
             GrigliaVideogiochi.DataBind();
-        }
-
-        private string GenerateSqlCommand()
-        {
-            char[] separators = new char[] {',', '.', '\\', '/', ' '};
-            StringBuilder stringBuilder = new StringBuilder("SELECT * FROM Videogiochi ");
-
-            stringBuilder = GenerateWHEREDate(RiceviSpunta(YearInterval),stringBuilder,YearFrom, YearTo, SQLFunzioniTime.YEAR);
-            stringBuilder = GenerateWHEREDate(RiceviSpunta(MonthInterval),stringBuilder,MonthFrom, MonthTo,SQLFunzioniTime.MONTH);
-            stringBuilder = GenerateWHEREDate(RiceviSpunta(DayInterval), stringBuilder,DayFrom,DayTo,SQLFunzioniTime.DAY);
-
-            stringBuilder = GenerateWHERETitle(stringBuilder);
-
-            stringBuilder = GenerateWHERENotes(stringBuilder,CompletionNotesTextBox.Text.Split(separators,StringSplitOptions.RemoveEmptyEntries).ToArray());
-
-            foreach (string note in CompletionNotesTextBox.Text.Split(separators, StringSplitOptions.RemoveEmptyEntries).ToArray())
-            {
-                Debug.WriteLine(note);
-            }
-
-            stringBuilder = GenerateWHEREConsole(stringBuilder);
-
-            stringBuilder = GenerateORDERBYFromDDL(stringBuilder);
-
-            Debug.WriteLine(stringBuilder.ToString());
-
-            return stringBuilder.ToString();
-        }
-
-        private StringBuilder GenerateWHERENotes(StringBuilder stringBuilder,params string[] notes)
-        {
-            if (stringBuilder != null)
-            {
-                if (!CompletionNotesTextBox.Text.Equals(String.Empty))
-                {
-                    foreach (string note in notes)
-                    {
-                        if (stringBuilder.ToString().Contains("WHERE"))
-                        {
-                            stringBuilder.Append(" and ").Append("Note LIKE " + "'%" + note + "%'");
-                        }
-                        else
-                        {
-                            stringBuilder.Append("WHERE ").Append("Note LIKE  " + "'%" + note + "%'");
-                        }
-                    }
-                }
-
-                if (RiceviSpunta(completionCheckBox))
-                {
-                    if (stringBuilder.ToString().Contains("WHERE"))
-                    {
-                        return stringBuilder.Append(" and ").Append("Note LIKE " + "'%100%'");
-                    }
-                    else
-                    {
-                        return stringBuilder.Append("WHERE ").Append("Note LIKE " + "'%100%'");
-                    }
-                }
-                else
-                {
-                    return stringBuilder;
-                }
-            }
-            return null;
-        }
-
-        private StringBuilder GenerateWHERETitle(StringBuilder stringBuilder)
-        {
-            if(stringBuilder != null)
-            {
-                if(Title.Text.Equals(String.Empty))
-                {
-                    return stringBuilder;
-                }
-                else
-                {
-                    if(RiceviSpunta(exactMatchCheckBox))
-                    {
-                        if (stringBuilder.ToString().Contains("WHERE"))
-                        {
-                            return stringBuilder.Append(" and ").Append("Titolo = " + "'" + Title.Text + "'");
-                        }
-                        else
-                        {
-                            return stringBuilder.Append("WHERE ").Append("Titolo = " + "'" + Title.Text + "'");
-                        }
-                    }
-                    else if(RiceviSpunta(FirstLettersCheckbox))
-                    {
-                        if (stringBuilder.ToString().Contains("WHERE"))
-                        {
-                            return stringBuilder.Append(" and ").Append("Titolo LIKE " + "'" + Title.Text + "%'");
-                        }
-                        else
-                        {
-                            return stringBuilder.Append("WHERE ").Append("Titolo LIKE " + "'" + Title.Text + "%'");
-                        }
-                    }
-                    else
-                    {
-                        if (stringBuilder.ToString().Contains("WHERE"))
-                        {
-                            return stringBuilder.Append(" and ").Append("Titolo LIKE " + "'%" + Title.Text + "%'");
-                        }
-                        else
-                        {
-                            return stringBuilder.Append("WHERE ").Append("Titolo LIKE " + "'%" + Title.Text + "%'");
-                        }
-                    }
-                }
-            }
-            return null;
-        }
-
-        private StringBuilder GenerateWHEREConsole(StringBuilder stringBuilder)
-        {
-            if(stringBuilder != null)
-            {
-                if (!IsANYSelected(ConsoleSelection))
-                {
-                    if (stringBuilder.ToString().Contains("WHERE"))
-                    {
-                        return stringBuilder.Append(" and ").Append("Console = " + "'" + ConsoleSelection.SelectedValue + "'");
-                    }
-                    else
-                    {
-                        return stringBuilder.Append("WHERE ").Append("Console = " + "'" + ConsoleSelection.SelectedValue + "'");
-                    }
-                }
-                else
-                {
-                    return stringBuilder;
-                }
-            }
-
-            return null;
-        }
-
-        private StringBuilder GenerateWHEREDate(bool IsInterval,StringBuilder stringBuilder,DropDownList firstDDL,DropDownList secondDDL,SQLFunzioniTime timeFunction)
-        {
-            int timeValue1, timeValue2;
-            string timeCriteria = ConvalidaEnum.GeneraFunzioneSQL(timeFunction,"Data");
-
-            string result;
-
-            if (IsInterval)
-            {
-                if (IsANYSelected(firstDDL))
-                {
-                    if (!IsANYSelected(secondDDL))
-                    {
-                        timeValue1 = Int32.Parse(secondDDL.SelectedItem.Value);
-
-                        result = (timeCriteria + " <= " + timeValue1);
-                    }
-                    else
-                    {
-                        result = String.Empty;
-                    }
-                }
-                else
-                {
-                    if (!IsANYSelected(secondDDL))
-                    {
-                        timeValue1 = Int32.Parse(firstDDL.SelectedItem.Value);
-                        timeValue2 = Int32.Parse(secondDDL.SelectedItem.Value);
-
-                        result = (timeCriteria + " >= " + Math.Min(timeValue1, timeValue2) + " and " + timeCriteria + " <= " + Math.Max(timeValue1, timeValue2));
-                    }
-                    else
-                    {
-                        timeValue1 = Int32.Parse(firstDDL.SelectedItem.Value);
-
-                        result = (timeCriteria + " >= " + timeValue1);
-                    }
-                }
-            }
-            else
-            {
-                if (IsANYSelected(firstDDL))
-                {
-                    result = String.Empty;
-                }
-                else
-                {
-                    timeValue1 = Int32.Parse(firstDDL.SelectedItem.Value);
-                    Debug.WriteLine(timeValue1);
-
-                    result = (timeCriteria + " = " + timeValue1);
-                }
-            }
-
-            if(result.Equals(String.Empty))
-            {
-                return stringBuilder;
-            }
-            else
-            {
-                if(stringBuilder.ToString().Contains("WHERE"))
-                {
-                    return stringBuilder.Append(" and ").Append(result);
-                }
-                else
-                {
-                    return stringBuilder.Append("WHERE ").Append(result);
-                }
-            }
-        }
-
-        private StringBuilder GenerateORDERBYFromDDL(StringBuilder stringBuilder)
-        {
-            stringBuilder.Append(" ORDER BY " + OrderCriteriaDDL.SelectedValue);
-
-            return stringBuilder;
         }
 
         public void ActualDateButton_Click(object sender, EventArgs e)
@@ -303,58 +88,13 @@ namespace GameCompletionManager
             throw new NotImplementedException();
         }
 
-        public void SwitchMode(object sender, EventArgs e)
-        {
-            if (ModifyMode())
-            {
-                SetModifyMode();
-            }
-            else
-            {
-                SetQueryMode();
-            }
-        }
-
-        private void SetQueryMode()
-        {
-            CambiaVisibilitaControls(true, TrovaControlsPerClasseCss("QueryExclusive"));
-            CambiaVisibilitaControls(false, TrovaControlsPerClasseCss("InsertionExclusive"));
-
-            CambiaVisibilitaControls(YearInterval.Checked, YearTo);
-            CambiaVisibilitaControls(MonthInterval.Checked, MonthTo);
-            CambiaVisibilitaControls(DayInterval.Checked, DayTo);
-            CambiaVisibilitaControls(HourInterval.Checked, HourTo);
-
-            CambiaVisibilitaControls(false,FirstLettersLabel);
-            CambiaVisibilitaControls(!exactMatchCheckBox.Checked, FirstLettersCheckbox);
-
-            CambiaVisibilitaControls(!FirstLettersCheckbox.Checked, Title, TitleLabel, exactMatchCheckBox);
-            CambiaVisibilitaControls(FirstLettersCheckbox.Checked, FirstLettersLabel);
-
-            ConfiguraLabel(TitleLabel, exactMatchCheckBox.Checked, "Titolo esatto: ", "Titolo: ");
-
-            AggiungiTutteAConsoleDropDown();
-        }
-
-        private void SetModifyMode()
-        {
-            CambiaVisibilitaControls(false, TrovaControlsPerClasseCss("QueryExclusive"));
-            CambiaVisibilitaControls(true, TrovaControlsPerClasseCss("InsertionExclusive"));
-            
-            CambiaVisibilitaControls(true, Title, TitleLabel);
-
-            ConfiguraLabel(TitleLabel, true, "Titolo: ");
-
-            RimuoviTutteDaConsoleDropdown();
-        }
-
-        public void UploadButton_Click(Object sender,EventArgs e)
+        public void UploadButton_Click(Object sender, EventArgs e)
         {
             string dbPath = "C:\\Users\\enryr\\Desktop\\Test.accdb";
             string dataProvider = "Microsoft.ACE.OLEDB.12.0";
             string SqlCommand = "SELECT * FROM Videogiochi ORDER BY ID";
 
-            DataSet source = Manager.RichiediQuery(dataProvider, dbPath,SqlCommand);
+            DataSet source = Manager.RichiediQuery(dataProvider, dbPath, SqlCommand);
 
             int minYear = DateTime.Now.Year;
             int maxYear = DateTime.Now.Year;
@@ -367,24 +107,231 @@ namespace GameCompletionManager
                 maxYear = Math.Max(maxYear, data.Year);
             }
 
-            RiempiDropDownListAnni(minYear, maxYear,YearFrom,YearTo);
+            RiempiDropDownListAnni(minYear, maxYear, YearFrom, YearTo);
             RiempiDropDownListOrd(OrderCriteriaDDL, source);
 
             GrigliaVideogiochi.DataSource = source;
             GrigliaVideogiochi.DataBind();
         }
 
-        private void RiconosciTipoQuery(string filePath)
+        //QUERY
+        private string GenerateSqlCommand()
         {
-            string fileType; 
+            char[] separators = new char[] { ',', '.', '\\', '/', ' ' };
+            StringBuilder stringBuilder = new StringBuilder("SELECT * FROM Videogiochi ");
+
+            stringBuilder = GenerateWHEREDate(RiceviSpunta(YearInterval), stringBuilder, YearFrom, YearTo, SQLFunzioniTime.YEAR);
+            stringBuilder = GenerateWHEREDate(RiceviSpunta(MonthInterval), stringBuilder, MonthFrom, MonthTo, SQLFunzioniTime.MONTH);
+            stringBuilder = GenerateWHEREDate(RiceviSpunta(DayInterval), stringBuilder, DayFrom, DayTo, SQLFunzioniTime.DAY);
+
+            stringBuilder = GenerateWHERETitle(stringBuilder);
+
+            stringBuilder = GenerateWHERENotes(stringBuilder, CompletionNotesTextBox.Text.Split(separators, StringSplitOptions.RemoveEmptyEntries).ToArray());
+
+            foreach (string note in CompletionNotesTextBox.Text.Split(separators, StringSplitOptions.RemoveEmptyEntries).ToArray())
+            {
+                Debug.WriteLine(note);
+            }
+
+            stringBuilder = GenerateWHEREConsole(stringBuilder);
+
+            stringBuilder = GenerateORDERBYFromDDL(stringBuilder);
+
+            Debug.WriteLine(stringBuilder.ToString());
+
+            return stringBuilder.ToString();
         }
 
-        private WebControl[] TrovaControlsPerClasseCss(string classeCss)
+        private StringBuilder GenerateWHERENotes(StringBuilder stringBuilder, params string[] notes)
         {
-            return Page.Form.Controls.OfType<WebControl>().Where(c => c.CssClass.Equals(classeCss)).ToArray();
+            if (stringBuilder != null)
+            {
+                if (!CompletionNotesTextBox.Text.Equals(String.Empty))
+                {
+                    foreach (string note in notes)
+                    {
+                        if (stringBuilder.ToString().Contains("WHERE"))
+                        {
+                            stringBuilder.Append(" and ").Append("Note LIKE " + "'%" + note + "%'");
+                        }
+                        else
+                        {
+                            stringBuilder.Append("WHERE ").Append("Note LIKE  " + "'%" + note + "%'");
+                        }
+                    }
+                }
+
+                if (RiceviSpunta(completionCheckBox))
+                {
+                    if (stringBuilder.ToString().Contains("WHERE"))
+                    {
+                        return stringBuilder.Append(" and ").Append("Note LIKE " + "'%100%'");
+                    }
+                    else
+                    {
+                        return stringBuilder.Append("WHERE ").Append("Note LIKE " + "'%100%'");
+                    }
+                }
+                else
+                {
+                    return stringBuilder;
+                }
+            }
+            return null;
         }
 
-        private void RiempiDropDownListOrd(DropDownList dropDownList,DataSet source)
+        private StringBuilder GenerateWHERETitle(StringBuilder stringBuilder)
+        {
+            if (stringBuilder != null)
+            {
+                if (Title.Text.Equals(String.Empty))
+                {
+                    return stringBuilder;
+                }
+                else
+                {
+                    if (RiceviSpunta(exactMatchCheckBox))
+                    {
+                        if (stringBuilder.ToString().Contains("WHERE"))
+                        {
+                            return stringBuilder.Append(" and ").Append("Titolo = " + "'" + Title.Text + "'");
+                        }
+                        else
+                        {
+                            return stringBuilder.Append("WHERE ").Append("Titolo = " + "'" + Title.Text + "'");
+                        }
+                    }
+                    else if (RiceviSpunta(FirstLettersCheckbox))
+                    {
+                        if (stringBuilder.ToString().Contains("WHERE"))
+                        {
+                            return stringBuilder.Append(" and ").Append("Titolo LIKE " + "'" + Title.Text + "%'");
+                        }
+                        else
+                        {
+                            return stringBuilder.Append("WHERE ").Append("Titolo LIKE " + "'" + Title.Text + "%'");
+                        }
+                    }
+                    else
+                    {
+                        if (stringBuilder.ToString().Contains("WHERE"))
+                        {
+                            return stringBuilder.Append(" and ").Append("Titolo LIKE " + "'%" + Title.Text + "%'");
+                        }
+                        else
+                        {
+                            return stringBuilder.Append("WHERE ").Append("Titolo LIKE " + "'%" + Title.Text + "%'");
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        private StringBuilder GenerateWHEREConsole(StringBuilder stringBuilder)
+        {
+            if (stringBuilder != null)
+            {
+                if (!IsANYSelected(ConsoleSelection))
+                {
+                    if (stringBuilder.ToString().Contains("WHERE"))
+                    {
+                        return stringBuilder.Append(" and ").Append("Console = " + "'" + ConsoleSelection.SelectedValue + "'");
+                    }
+                    else
+                    {
+                        return stringBuilder.Append("WHERE ").Append("Console = " + "'" + ConsoleSelection.SelectedValue + "'");
+                    }
+                }
+                else
+                {
+                    return stringBuilder;
+                }
+            }
+
+            return null;
+        }
+
+        private StringBuilder GenerateWHEREDate(bool IsInterval, StringBuilder stringBuilder, DropDownList firstDDL, DropDownList secondDDL, SQLFunzioniTime timeFunction)
+        {
+            int timeValue1, timeValue2;
+            string timeCriteria = ConvalidaEnum.GeneraFunzioneSQL(timeFunction, "Data");
+
+            string result;
+
+            if (IsInterval)
+            {
+                if (IsANYSelected(firstDDL))
+                {
+                    if (!IsANYSelected(secondDDL))
+                    {
+                        timeValue1 = Int32.Parse(secondDDL.SelectedItem.Value);
+
+                        result = (timeCriteria + " <= " + timeValue1);
+                    }
+                    else
+                    {
+                        result = String.Empty;
+                    }
+                }
+                else
+                {
+                    if (!IsANYSelected(secondDDL))
+                    {
+                        timeValue1 = Int32.Parse(firstDDL.SelectedItem.Value);
+                        timeValue2 = Int32.Parse(secondDDL.SelectedItem.Value);
+
+                        result = (timeCriteria + " >= " + Math.Min(timeValue1, timeValue2) + " and " + timeCriteria + " <= " + Math.Max(timeValue1, timeValue2));
+                    }
+                    else
+                    {
+                        timeValue1 = Int32.Parse(firstDDL.SelectedItem.Value);
+
+                        result = (timeCriteria + " >= " + timeValue1);
+                    }
+                }
+            }
+            else
+            {
+                if (IsANYSelected(firstDDL))
+                {
+                    result = String.Empty;
+                }
+                else
+                {
+                    timeValue1 = Int32.Parse(firstDDL.SelectedItem.Value);
+                    Debug.WriteLine(timeValue1);
+
+                    result = (timeCriteria + " = " + timeValue1);
+                }
+            }
+
+            if (result.Equals(String.Empty))
+            {
+                return stringBuilder;
+            }
+            else
+            {
+                if (stringBuilder.ToString().Contains("WHERE"))
+                {
+                    return stringBuilder.Append(" and ").Append(result);
+                }
+                else
+                {
+                    return stringBuilder.Append("WHERE ").Append(result);
+                }
+            }
+        }
+
+        private StringBuilder GenerateORDERBYFromDDL(StringBuilder stringBuilder)
+        {
+            stringBuilder.Append(" ORDER BY " + OrderCriteriaDDL.SelectedValue);
+
+            return stringBuilder;
+        }
+
+        //DROPDOWN LISTS
+        private void RiempiDropDownListOrd(DropDownList dropDownList, DataSet source)
         {
             if (dropDownList != null)
             {
@@ -392,7 +339,7 @@ namespace GameCompletionManager
 
                 dropDownList.Items.Clear();
 
-                foreach(DataColumn column in source.Tables[0].Columns)
+                foreach (DataColumn column in source.Tables[0].Columns)
                 {
                     ListItem annoItem = new ListItem();
                     annoItem.Text = annoItem.Value = column.Caption;
@@ -402,7 +349,7 @@ namespace GameCompletionManager
             }
         }
 
-        private void RiempiDropDownListAnni(int annoMin,int annoMax, params DropDownList[] dropDownLists)
+        private void RiempiDropDownListAnni(int annoMin, int annoMax, params DropDownList[] dropDownLists)
         {
             foreach (DropDownList dropDownList in dropDownLists)
             {
@@ -527,7 +474,7 @@ namespace GameCompletionManager
             ConsoleSelection.SelectedIndex = 0;
         }
 
-        private void SelectANYElement(bool cond,params DropDownList[] dropDownLists)
+        private void SelectANYElement(bool cond, params DropDownList[] dropDownLists)
         {
             if (cond)
             {
@@ -599,54 +546,13 @@ namespace GameCompletionManager
             dropDownList.Items.AddRange(itemList.ToArray());
         }
 
-        private DropDownList FirstVisibleDDL(params DropDownList[] dropDownLists)
-        {
-            foreach(DropDownList dropDownList in dropDownLists)
-            {
-                if(dropDownList != null && dropDownList.Visible)
-                {
-                    return dropDownList;
-                }
-            }
-
-            return null;
-        }
-
-        private void ConfiguraTextbox(TextBox textBox, Boolean testoVisualizzato, string testoDiOutput)
-        {
-            if (EsisteControl(textBox))
-            {
-                if (testoVisualizzato)
-                {
-                    SettaTextbox(textBox, testoDiOutput);
-                }
-                else
-                {
-                    ResettaTextbox(textBox);
-                }
-            }
-        }
-
-        private void SettaLabel(Label label, string outputText)
-        {
-            label.Text = outputText;
-        }
-
-        private void ResettaLabel(Label label)
-        {
-            label.Text = "";
-        }
-
+        //CHECKBOXES
         private bool RiceviSpunta(CheckBox checkBox)
         {
             return checkBox.Checked;
         }
 
-        private String RiceviTesto(TextBox tbox)
-        {
-            return tbox.Text;
-        }
-
+        //LABELS
         private void ConfiguraLabel(Label label, Boolean testoVisualizzato, string testoDiOutput)
         {
             if (EsisteControl(label))
@@ -677,48 +583,194 @@ namespace GameCompletionManager
             }
         }
 
+        private void SettaLabel(Label label, string outputText)
+        {
+            if (EsisteControl(label))
+            {
+                label.Text = outputText;
+            }
+        }
+
+        private void ResettaLabel(params Label[] labels)
+        {
+            if (EsistonoControls(labels))
+            {
+                foreach (Label label in labels)
+                {
+                    label.Text = "";
+                }
+            }
+        }
+
+        //TEXTBOXES
+        private void ConfiguraTextbox(TextBox textBox, Boolean testoVisualizzato, string testoDiOutput)
+        {
+            if (EsisteControl(textBox))
+            {
+                if (testoVisualizzato)
+                {
+                    SettaTextbox(textBox, testoDiOutput);
+                }
+                else
+                {
+                    ResettaTextbox(textBox);
+                }
+            }
+        }
+
+        private String RiceviTesto(TextBox tbox)
+        {
+            if (EsisteControl(tbox))
+            {
+                return tbox.Text;
+            }
+            else
+            {
+                return "";
+            }
+        }
+
         private void SettaTextbox(TextBox tbox, string outputText)
         {
-            tbox.Text = outputText;
+            if (EsisteControl(tbox))
+            {
+                tbox.Text = outputText;
+            }
         }
 
-        private void ResettaTextbox(TextBox tbox)
+        private void ResettaTextbox(params TextBox[] tboxes)
         {
-            tbox.Text = "";
+            if(EsistonoControls(tboxes))
+            {
+                foreach(TextBox tbox in tboxes)
+                {
+                    if (EsisteControl(tbox))
+                    {
+                        tbox.Text = "";
+                    }
+                }
+            }
         }
 
-        private Boolean EsisteControl(WebControl control)
+        //MODES
+        public void SwitchMode(object sender, EventArgs e)
         {
-            return (control != null);
+            if (IsInModifyMode())
+            {
+                SetModifyMode();
+            }
+            else
+            {
+                SetQueryMode();
+            }
         }
 
-        private bool ModifyMode()
+        private void SetQueryMode()
+        {
+            CambiaVisibilitaControls(true, TrovaControlsPerClasseCss("QueryExclusive"));
+            CambiaVisibilitaControls(false, TrovaControlsPerClasseCss("InsertionExclusive"));
+
+            CambiaVisibilitaControls(YearInterval.Checked, YearTo);
+            CambiaVisibilitaControls(MonthInterval.Checked, MonthTo);
+            CambiaVisibilitaControls(DayInterval.Checked, DayTo);
+            CambiaVisibilitaControls(HourInterval.Checked, HourTo);
+
+            CambiaVisibilitaControls(false, FirstLettersLabel);
+            CambiaVisibilitaControls(!exactMatchCheckBox.Checked, FirstLettersCheckbox);
+
+            CambiaVisibilitaControls(!FirstLettersCheckbox.Checked, Title, TitleLabel, exactMatchCheckBox);
+            CambiaVisibilitaControls(FirstLettersCheckbox.Checked, FirstLettersLabel);
+
+            ConfiguraLabel(TitleLabel, exactMatchCheckBox.Checked, "Titolo esatto: ", "Titolo: ");
+
+            AggiungiTutteAConsoleDropDown();
+        }
+
+        private void SetModifyMode()
+        {
+            CambiaVisibilitaControls(false, TrovaControlsPerClasseCss("QueryExclusive"));
+            CambiaVisibilitaControls(true, TrovaControlsPerClasseCss("InsertionExclusive"));
+
+            CambiaVisibilitaControls(true, Title, TitleLabel);
+
+            ConfiguraLabel(TitleLabel, true, "Titolo: ");
+
+            RimuoviTutteDaConsoleDropdown();
+        }
+
+        private bool IsInModifyMode()
         {
             return ModeCheckbox.Checked;
         }
 
-        private bool QueryMode()
+        private bool IsInQueryMode()
         {
             return !ModeCheckbox.Checked;
         }
 
-        private void CambiaVisibilitaControl(Boolean value, WebControl control)
+        //GENERIC CONTROLS
+        private void CambiaVisibilitaControls(bool value, params WebControl[] controls)
         {
-            if (control != null)
-            {
-                control.Visible = value;
-            }
-        }
-
-        private void CambiaVisibilitaControls(Boolean value, params WebControl[] controls)
-        {
-            if (controls != null && controls.Length > 0)
+            if (EsistonoControls(controls))
             {
                 foreach (WebControl control in controls)
                 {
-                    CambiaVisibilitaControl(value, control);
+                    if (EsisteControl(control))
+                    {
+                        try
+                        {
+                            CambiaVisibilitaControl(value, control);
+                        }
+                        catch
+                        {
+                            throw;
+                        }
+                    }
                 }
             }
+            else
+            {
+                throw new NullControlException("L'insieme di controls risulta inesistente");
+            }
+        }
+
+        private void CambiaVisibilitaControl(bool value, WebControl control)
+        {
+            if (EsisteControl(control))
+            {
+                control.Visible = value;
+            }
+            else
+            {
+                throw new NullControlException("Il control risulta inesistente");
+            }
+        }
+
+        private WebControl[] TrovaControlsPerClasseCss(string classeCss)
+        {
+            if (Esiste(classeCss))
+            {
+                return Page.Form.Controls.OfType<WebControl>().Where(c => c.CssClass.Equals(classeCss)).ToArray();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        private bool EsistonoControls(params WebControl[] controls)
+        {
+            return controls != null && controls.Length > 0;
+        }
+
+        private bool EsisteControl(WebControl control)
+        {
+            return (control != null);
+        }
+
+        private bool Esiste(string s)
+        { 
+            return (s != null);
         }
     }
 }

@@ -4,66 +4,68 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 
-public class ConvalidaEnum
+namespace GameCompletionManager
 {
-    static ConvalidaEnum()
+    public class ConvalidaEnum
     {
-    }
-
-    public static string GeneraFunzioneSQL(SQLFunzioniTime SQLFunction,params string[] parameters)
-    {
-        return SQLFunction.ToString() + "(" + parameters[0] + ")";
-    }
-
-    public static Boolean Valida(string valueName,Enum inputEnumValue)
-    {
-        Boolean valoreTrovato = false;
-  
-        if (valueName != null)
+        static ConvalidaEnum()
         {
-            foreach(String name in Enum.GetNames(inputEnumValue.GetType()))
+        }
+
+        public static string GeneraFunzioneSQL(SQLFunzioniTime SQLFunction, params string[] parameters)
+        {
+            return SQLFunction.ToString() + "(" + parameters[0] + ")";
+        }
+
+        public static bool Valida(string valueName, Enum inputEnumValue)
+        {
+            bool valoreTrovato = false;
+
+            if (valueName != null)
             {
-                if(valueName.Equals(name,StringComparison.OrdinalIgnoreCase)) {  valoreTrovato = true; break;}
+                foreach (string name in Enum.GetNames(inputEnumValue.GetType()))
+                {
+                    if (valueName.Equals(name, StringComparison.OrdinalIgnoreCase)) { valoreTrovato = true; break; }
+                }
             }
-        }  
-        
-        return valoreTrovato; 
-    }
 
-    public static Boolean ValidaNome(string valueName,Enum inputEnumValue)
-    {
-        Boolean nomeTrovato = false;
+            return valoreTrovato;
+        }
 
-        if (valueName != null)
+        public static bool ValidaNome(string valueName, Enum inputEnumValue)
         {
-            foreach (String name in Enum.GetNames(inputEnumValue.GetType()))
+            bool nomeTrovato = false;
+
+            if (valueName != null)
             {
-                if(NormalizzaStringa(valueName).Equals(NormalizzaStringa(RicavaNome(inputEnumValue)),StringComparison.OrdinalIgnoreCase)) { nomeTrovato = true; break; }
+                foreach (string name in Enum.GetNames(inputEnumValue.GetType()))
+                {
+                    if (NormalizzaStringa(valueName).Equals(NormalizzaStringa(RicavaNome(inputEnumValue)), StringComparison.OrdinalIgnoreCase)) { nomeTrovato = true; break; }
+                }
             }
+
+            return nomeTrovato;
         }
 
-        return nomeTrovato;
-    }
-
-    public static List<string> RicavaDescrizioniEnum(Type tipoEnum)
-    {
-        if (!tipoEnum.IsEnum)
+        public static List<string> RicavaDescrizioniEnum(Type tipoEnum)
         {
-            throw new ArgumentException("Il tipo in input deve essere una enum");
+            if (!tipoEnum.IsEnum)
+            {
+                throw new ArgumentException("Il tipo in input deve essere una enum");
+            }
+
+            List<string> risultato = new List<string>();
+
+            foreach (Enum value in Enum.GetValues(tipoEnum))
+            {
+                risultato.Add(RicavaNome(value));
+            }
+
+            return risultato;
         }
 
-        List<string> risultato = new List<string>();
-
-        foreach (Enum value in Enum.GetValues(tipoEnum))
+        private static string RicavaNome(Enum value)
         {
-            risultato.Add(RicavaNome(value));
-        }
-
-        return risultato;
-    }
-
-    private static string RicavaNome(Enum value) 
-    {
             FieldInfo fi = value.GetType().GetField(value.ToString());
 
             DescriptionAttribute[] attributes = fi.GetCustomAttributes(typeof(DescriptionAttribute), false) as DescriptionAttribute[];
@@ -74,10 +76,11 @@ public class ConvalidaEnum
             }
 
             return value.ToString();
-    }
+        }
 
-    private static string NormalizzaStringa(string value)
-    {
-        return value.Replace(" ", "").Replace("_", "").Replace("-", "").Trim();
+        private static string NormalizzaStringa(string value)
+        {
+            return value.Replace(" ", "").Replace("_", "").Replace("-", "").Trim();
+        }
     }
 }
