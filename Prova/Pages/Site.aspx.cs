@@ -635,7 +635,7 @@ namespace GameCompletionManager
             }
             else
             {
-                return "";
+                throw new NullControlException("Textbox da cui ricavare il testo inesistente");
             }
         }
 
@@ -644,6 +644,10 @@ namespace GameCompletionManager
             if (EsisteControl(tbox))
             {
                 tbox.Text = outputText;
+            }
+            else
+            {
+                throw new NullControlException("Textbox da settare inesistente");
             }
         }
 
@@ -657,7 +661,15 @@ namespace GameCompletionManager
                     {
                         tbox.Text = "";
                     }
+                    else
+                    {
+                        throw new NullControlException("Textbox da resettare inesistente");
+                    }
                 }
+            }
+            else
+            {
+                throw new NullControlException("Insieme di textboxes da resettare inesistente");
             }
         }
 
