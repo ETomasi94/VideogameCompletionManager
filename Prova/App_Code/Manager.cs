@@ -10,7 +10,7 @@ namespace GameCompletionManager
     {
         public static DataSet RichiediQuery(string dataProvider,string dataSource,string SQLCommand)
         {
-           return GestoreDati.EseguiQuery(dataProvider, dataSource, SQLCommand);
+           return GestoreDati.GeneraDataSet(dataProvider, dataSource, SQLCommand);
         }
 
         public static void SegnalaEccezione(Exception ex)

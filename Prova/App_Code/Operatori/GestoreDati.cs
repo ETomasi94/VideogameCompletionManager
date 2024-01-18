@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.OleDb;
+using System.Data.SqlClient;
 
 
 namespace GameCompletionManager
@@ -11,7 +12,7 @@ namespace GameCompletionManager
     public static class GestoreDati
     {
 
-        public static DataSet EseguiQuery(string dataProvider,string dataSource,string SQLCommand)
+        public static DataSet GeneraDataSet(string dataProvider,string dataSource,string SQLCommand)
         {
             DataSet queryResult = new DataSet();
 
@@ -19,13 +20,26 @@ namespace GameCompletionManager
             {
                 using(ConnessioneAccess connessione = new ConnessioneAccess(dataProvider,dataSource))
                 {
-                    OleDbCommand cmd = new OleDbCommand(SQLCommand,connessione.connection);
+                    queryResult = ScriviSuDataSet(connessione, SQLCommand);
+                }
+            }
+            catch (Exception ex) 
+            {
+                GestoreEccezioni.StampaEccezione(ex);
+            }
 
-                    connessione.ApriConnessione();
+             return queryResult;        
+        }
+        
+        public static DataTable GeneraTabella(string dataProvider, string dataSource, string SQLCommand)
+        {
+            DataTable queryResult = new DataTable();
 
-                    OleDbDataAdapter adapter = new OleDbDataAdapter(cmd);
-
-                    adapter.Fill(queryResult);
+            try
+            {
+                using (ConnessioneAccess connessione = new ConnessioneAccess(dataProvider, dataSource))
+                {
+                    queryResult = ScriviSuTabella(connessione, SQLCommand);
                 }
             }
             catch (Exception ex) 
@@ -34,6 +48,36 @@ namespace GameCompletionManager
             }
 
             return queryResult;
-        }    
+        }
+
+        private static DataSet ScriviSuDataSet(ConnessioneAccess connessione,string command) 
+        {
+            DataSet ds = new DataSet();
+
+            OleDbCommand cmd = new OleDbCommand(command, connessione.connection);
+
+            connessione.ApriConnessione();
+
+            OleDbDataAdapter adapter = new OleDbDataAdapter(cmd);
+
+            adapter.Fill(ds);
+
+            return ds;
+        }
+
+        private static DataTable ScriviSuTabella(ConnessioneAccess connessione,string command)
+        {
+            DataTable table = new DataTable();
+
+            OleDbCommand cmd = new OleDbCommand(command, connessione.connection);
+
+            connessione.ApriConnessione();
+
+            OleDbDataAdapter adapter = new OleDbDataAdapter(cmd);
+
+            adapter.Fill(table);
+
+            return table;
+        }
     }
 }

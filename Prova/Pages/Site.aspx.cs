@@ -198,7 +198,7 @@ namespace GameCompletionManager
                     {
                         if (stringBuilder.ToString().Contains("WHERE"))
                         {
-                            return stringBuilder.Append(" and ").Append("Titolo = " + "'" + Title.Text + "'");
+                            return stringBuilder.Append(" AND ").Append("Titolo = " + "'" + Title.Text + "'");
                         }
                         else
                         {
@@ -209,7 +209,7 @@ namespace GameCompletionManager
                     {
                         if (stringBuilder.ToString().Contains("WHERE"))
                         {
-                            return stringBuilder.Append(" and ").Append("Titolo LIKE " + "'" + Title.Text + "%'");
+                            return stringBuilder.Append(" AND ").Append("Titolo LIKE " + "'" + Title.Text + "%'");
                         }
                         else
                         {
