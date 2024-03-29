@@ -1,20 +1,13 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Site.aspx.cs" Inherits="GameCompletionManager.MainPage" MaintainScrollPositionOnPostback="true" %>
+﻿<%@ Page Title="Gestione videogiochi" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true" CodeFile="GamesManager.aspx.cs" Inherits="GamesManager" %>
 
-<!DOCTYPE html>
+<asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="Server">
+    <main id="Games">
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head runat="server">
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Lista dei videogiochi</title>
-    <link rel="stylesheet" href="/Style/MainSite.css" />
-    <script src="script.js"></script>
-</head>
-<body>
-    <form id="MainSiteForm" runat="server" enctype="multipart/form-data" method="post">
+        <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:Games %>" ProviderName="<%$ ConnectionStrings:Games.ProviderName %>" SelectCommand="SELECT * FROM [Videogiochi] ORDER BY [ID]"></asp:SqlDataSource>
+        <asp:SqlDataSource ID="DaCompletare" runat="server" ConnectionString="<%$ ConnectionStrings:Games %>" ProviderName="<%$ ConnectionStrings:Games.ProviderName %>" SelectCommand="SELECT e.IDEdizione, t.Titolo, e.SiglaConsole FROM [Edizioni] e INNER JOIN [Titoli] t ON e.IDTitolo = t.IDTitolo WHERE e.IDTitolo NOT IN (SELECT c.IDEdizione FROM Completamenti c) ORDER BY [t.Titolo]"></asp:SqlDataSource>
+        <asp:SqlDataSource ID="Completati" runat="server" ConnectionString="<%$ ConnectionStrings:Games %>" ProviderName="<%$ ConnectionStrings:Games.ProviderName %>" SelectCommand="SELECT e.IDEdizione, t.Titolo, e.SiglaConsole FROM [Edizioni] e INNER JOIN [Titoli] t ON e.IDTitolo = t.IDTitolo WHERE e.IDEdizione IN (SELECT c.IDEdizione FROM Completamenti c) ORDER BY [t.Titolo]"></asp:SqlDataSource>
 
-        <h1>Lista dei videogiochi completati</h1>
+        <h1>I tuoi videogiochi</h1>
 
         <p>
             <img src="/Immagini/VideoGames.jpg" height="300" style="width: 1456px" />
@@ -23,7 +16,7 @@
         <hr />
 
         <h3>Un po' di musica per caricarvi</h3>
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/pSvn0rp0kz0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=" true"></iframe>
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/pSvn0rp0kz0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="true"></iframe>
 
         <hr />
 
@@ -39,29 +32,30 @@
 
         <hr />
 
-        <h4><asp:Label runat="server" ID="ModeLabel">Ricerca all'interno del database</asp:Label></h4>
+        <h4>
+            <asp:Label runat="server" ID="ModeLabel">Ricerca all'interno del database</asp:Label></h4>
 
         <div id="SearchAttributes">
 
             <label class="switch">
-                <asp:CheckBox id="ModeCheckbox" runat="server" AutoPostBack="true" OnCheckedChanged="SwitchMode" />
+                <asp:CheckBox ID="ModeCheckbox" runat="server" AutoPostBack="true" OnCheckedChanged="SwitchMode" />
                 <span runat="server" class="slider round"></span>
             </label>
 
             <div id="CompletionDateAttributes">
-            <p>
-                <asp:Label ID="YearLabel" runat="server">Anno di completamento: </asp:Label>
-                <asp:DropDownList ID="YearFrom" runat="server" />
-                <asp:DropDownList ID="YearTo" runat="server" CssClass="QueryExclusive" Visible="false" />
-                <asp:CheckBox ID="YearInterval" Text="Intervallo" runat="server" CssClass="QueryExclusive" Checked="false" AutoPostBack="true" OnCheckedChanged="YearInterval_OnCheckedChange" />
-            </p>
+                <p>
+                    <asp:Label ID="YearLabel" runat="server">Anno di completamento: </asp:Label>
+                    <asp:DropDownList ID="YearFrom" runat="server" />
+                    <asp:DropDownList ID="YearTo" runat="server" CssClass="QueryExclusive" Visible="false" />
+                    <asp:CheckBox ID="YearInterval" Text="Intervallo" runat="server" CssClass="QueryExclusive" Checked="false" AutoPostBack="true" OnCheckedChanged="YearInterval_OnCheckedChange" />
+                </p>
 
-            <p>
-                <asp:Label ID="MonthLabel" runat="server">Mese di completamento: </asp:Label>
-                <asp:DropDownList ID="MonthFrom" runat="server" />
-                <asp:DropDownList ID="MonthTo" runat="server" CssClass="QueryExclusive" Visible="false" />
-                <asp:CheckBox ID="MonthInterval" Text="Intervallo" runat="server" CssClass="QueryExclusive" Checked="false" AutoPostBack="true" OnCheckedChanged="MonthInterval_OnCheckedChange" />
-            </p>
+                <p>
+                    <asp:Label ID="MonthLabel" runat="server">Mese di completamento: </asp:Label>
+                    <asp:DropDownList ID="MonthFrom" runat="server" />
+                    <asp:DropDownList ID="MonthTo" runat="server" CssClass="QueryExclusive" Visible="false" />
+                    <asp:CheckBox ID="MonthInterval" Text="Intervallo" runat="server" CssClass="QueryExclusive" Checked="false" AutoPostBack="true" OnCheckedChanged="MonthInterval_OnCheckedChange" />
+                </p>
 
                 <p>
                     <asp:Label ID="DayLabel" runat="server">Giorno di completamento: </asp:Label>
@@ -92,13 +86,13 @@
             </div>
 
             <div id="GameTitleAttributes">
-            <p>
-                <asp:Label ID="TitleLabel" runat="server">Titolo: </asp:Label>
-                <asp:TextBox ID="Title" placeholder="Titolo" runat="server" />
-                <asp:Label ID="FirstLettersLabel" runat="server" CssClass="QueryExclusive"  Visible="false" >Iniziali: </asp:Label>
-                <asp:CheckBox runat="server" ID="exactMatchCheckBox" Text="Titolo Esatto"  CssClass="QueryExclusive" AutoPostBack="true" OnCheckedChanged="ExactMatchCheckBox_OnCheckedChange" />
-                <asp:CheckBox runat="server" ID="FirstLettersCheckbox" Text="Inizia con" CssClass="QueryExclusive" AutoPostBack="true" OnCheckedChanged="FirstLettersCheckbox_OnCheckedChange" />
-            </p>
+                <p>
+                    <asp:Label ID="TitleLabel" runat="server">Titolo: </asp:Label>
+                    <asp:TextBox ID="Titolo" placeholder="Titolo" runat="server" />
+                    <asp:Label ID="FirstLettersLabel" runat="server" CssClass="QueryExclusive" Visible="false">Iniziali: </asp:Label>
+                    <asp:CheckBox runat="server" ID="exactMatchCheckBox" Text="Titolo Esatto" CssClass="QueryExclusive" AutoPostBack="true" OnCheckedChanged="ExactMatchCheckBox_OnCheckedChange" />
+                    <asp:CheckBox runat="server" ID="FirstLettersCheckbox" Text="Inizia con" CssClass="QueryExclusive" AutoPostBack="true" OnCheckedChanged="FirstLettersCheckbox_OnCheckedChange" />
+                </p>
             </div>
 
             <div id="CompletionNotes">
@@ -176,15 +170,25 @@
             <p>
                 <input runat="server" id="FileInput" type="file" name="fileInput" /><span asp-validation-for="FileInput.FormFile"></span>
             </p>
-            <p> <asp:Button runat="server" ID="UploadButton" name="Bottone di upload" text="Carica" OnClick="UploadButton_Click" /></p>
+            <p>
+                <asp:Button runat="server" ID="UploadButton" name="Bottone di upload" Text="Carica" OnClick="UploadButton_Click" />
+            </p>
         </div>
 
         <hr />
 
-        <div id="ResultTable" style="overflow:scroll">
-            <asp:GridView ID="GrigliaVideogiochi" runat="server" AutoGenerateColumns="False"
-                DataKeyNames="id" BackColor="White" BorderColor="White"
-                BorderStyle="Ridge" BorderWidth="2px" CellPadding="3" CellSpacing="1"
+        <div id="ResultTable" style="overflow: scroll">
+
+            <asp:GridView ID="GrigliaVideogiochi"
+                runat="server"
+                AutoGenerateColumns="False"
+                DataKeyNames="id"
+                BackColor="White"
+                BorderColor="White"
+                BorderStyle="Ridge"
+                BorderWidth="2px"
+                CellPadding="3"
+                CellSpacing="1"
                 GridLines="None">
                 <Columns>
                     <asp:TemplateField HeaderText="ID">
@@ -238,7 +242,112 @@
                 <SortedDescendingCellStyle BackColor="#CAC9C9" />
                 <SortedDescendingHeaderStyle BackColor="#33276A" />
             </asp:GridView>
+
         </div>
-    </form>
-</body>
-</html>
+
+        <hr />
+
+        <div class="container">
+
+            <div class="row" style="width: fit-content;">
+
+                <div class="col-4">
+                    <asp:DropDownList ID="notCompletedDropDownList" runat="server"
+                        DataSourceID="DaCompletare"
+                        DataValueField="IDEdizione"
+                        DataTextField="Titolo" OnSelectedIndexChanged="CambiaGiocoDaCompletare">
+                    </asp:DropDownList>
+                </div>
+
+                <div class="col-4">
+
+                    <div class="card" style="border: 1px solid black;">
+
+                        <div class="card-header" style="background-color: darkgreen;">
+                            <asp:Label ID="gameConsole" runat="server" Font-Bold="true"></asp:Label>
+                        </div>
+
+                        <div class="card-body">
+
+                            <div class="col-6">
+                                <asp:Label ID="gameTitle" runat="server" Font-Bold="true"></asp:Label>
+                            </div>
+
+                            <div class="col-6">
+                                <asp:Label ID="gameNationality" runat="server" Font-Bold="true"></asp:Label>
+                            </div>
+
+                            <div class="col-6">
+                                <asp:Label ID="gameReleaseDate" runat="server" Font-Bold="true"></asp:Label>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-4">
+
+                    <div class="card" style="border: 1px solid black;">
+
+                        <div class="card-header" style="background-color: darkgreen;">
+                            <asp:TextBox ID="completionDateTextbox" runat="server" type="date" Font-Bold="true"></asp:TextBox>
+                        </div>
+
+                        <div class="card-body">
+
+                            <div class="form-row">
+
+                                <div class="form-group col-md-6">
+                                    <asp:TextBox ID="completionHourTextbox" runat="server" type="number" min="0" max="23" class="form-control" placeholder="Ora"></asp:TextBox>
+                                    <asp:TextBox ID="completionMinuteTextbox" runat="server" type="number" min="0" max="59" class="form-control" placeholder="Minuti"></asp:TextBox>
+                                    <asp:TextBox ID="completionSecondTextbox" runat="server" type="number" min="0" max="59" class="form-control" placeholder="Secondi"></asp:TextBox>
+                                </div>
+
+                                <div class="form-group col-md-4">
+                                    <asp:TextBox ID="endingTextbox" runat="server" CssClass="form-control" placeholder="Finale"></asp:TextBox>
+                                    <asp:TextBox ID="notesTextbox" runat="server" CssClass="form-control" placeholder="Note"></asp:TextBox>
+                                </div>
+
+                            </div>
+
+                            <div class="form-row">
+
+                                <asp:CheckBox ID="completeGameCheckBox" runat="server" Text="Completamento al 100%" />
+
+                            </div>
+
+                            <div class="form-row">
+                                <asp:Button ID="CurrentDateButton" runat="server" Text="Data corrente" OnClick="ImpostaDataCorrente" />
+                                <asp:Button ID="InsertButton" runat="server" Text="Inserisci" OnClick="InserisciCompletamento" />
+                                <asp:Button ID="RemoveButton" runat="server" Text="Rimuovi" />
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <hr />
+
+
+        <div class="row">
+            <div class="col-4">
+                <asp:DropDownList ID="completedDropDownList" runat="server"
+                    DataSourceID="Completati"
+                    DataValueField="IDEdizione"
+                    DataTextField="Titolo">
+                </asp:DropDownList>
+            </div>
+
+        </div>
+
+    </main>
+</asp:Content>
+
