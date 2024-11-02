@@ -22,15 +22,11 @@ public partial class GamesManager : Page
     {
         if (!IsPostBack)
         {
-            OrdinaDropDownList(ConsoleSelection);
-            ResettaDropDownList(YearFrom, YearTo);
-            RiempiDropDownListMesi(MonthFrom, MonthTo);
-            RiempiDropDownListGiorni(DayFrom, DayTo);
-            RiempiDropDownListOre(HourFrom, HourTo);
         }
     }
 
-    public void QueryButton_Click(Object sender, EventArgs e)
+    
+    /*public void QueryButton_Click(Object sender, EventArgs e)
     {
         OleDbCommand comandoSelezione = DbConnectionUtils.CreateCommand(CommandType.Text, GenerateSqlCommand());
 
@@ -112,11 +108,6 @@ public partial class GamesManager : Page
         }
 
         RiempiDropDownListAnni(minYear, maxYear, YearFrom, YearTo);
-        /*RiempiDropDownListOrd(OrderCriteriaDDL, tabellaVideogiochi);
-
-        GrigliaVideogiochi.DataSource = source;
-        GrigliaVideogiochi.DataBind();
-        */
     }
 
     //QUERY
@@ -214,6 +205,14 @@ public partial class GamesManager : Page
         return null;
     }
 
+    private StringBuilder GenerateORDERBYFromDDL(StringBuilder stringBuilder)
+    {
+        stringBuilder.Append(" ORDER BY " + OrderCriteriaDDL.SelectedValue);
+
+        return stringBuilder;
+    }
+    */
+
     private StringBuilder GenerateWHEREDate(bool IsInterval, StringBuilder stringBuilder, DropDownList firstDDL, DropDownList secondDDL, SQLFunzioniTime timeFunction)
     {
         int timeValue1, timeValue2;
@@ -284,14 +283,6 @@ public partial class GamesManager : Page
             }
         }
     }
-
-    private StringBuilder GenerateORDERBYFromDDL(StringBuilder stringBuilder)
-    {
-        stringBuilder.Append(" ORDER BY " + OrderCriteriaDDL.SelectedValue);
-
-        return stringBuilder;
-    }
-
 
 
     private void RiempiDropDownListAnni(int annoMin, int annoMax, params DropDownList[] dropDownLists)
@@ -762,7 +753,7 @@ public partial class GamesManager : Page
             string ending = endingTextbox.Text;
             string notes = notesTextbox.Text;
 
-            bool totalComplete = completionCheckBox.Checked;
+            bool totalComplete = completeGameCheckBox.Checked;
 
 
             string command = "INSERT INTO Completamenti ([Codice],[IDEdizione],[Data],[Ora],[GiornoDellaSettimana],[Finale],[Cento per cento],[Note]) " +
@@ -793,5 +784,13 @@ public partial class GamesManager : Page
     private string GetConnectionString()
     {
         return ConfigurationManager.ConnectionStrings["Games"].ToString();
+    }
+
+    protected void allCovers_Click(object sender, EventArgs e)
+    {
+        for(int i=42; i<105; i++)
+        {
+            ImpostaCopertina(i);
+        }
     }
 }
