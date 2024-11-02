@@ -342,9 +342,11 @@ public partial class GamesManager : Page
 
                 for (int i = 1; i <= 12; i++)
                 {
-                    ListItem meseItem = new ListItem();
-                    meseItem.Value = i.ToString();
-                    meseItem.Text = ((Mesi)i).ToString();
+                    ListItem meseItem = new ListItem
+                    {
+                        Value = i.ToString(),
+                        Text = ((Mesi)i).ToString()
+                    };
 
                     dropDownList.Items.Add(meseItem);
                 }
@@ -465,10 +467,11 @@ public partial class GamesManager : Page
 
     private ListItem CreateANYElement()
     {
-        ListItem anyItem = new ListItem();
-
-        anyItem.Value = "ANY";
-        anyItem.Text = "Tutti";
+        ListItem anyItem = new ListItem
+        {
+            Value = "ANY",
+            Text = "Tutti"
+        };
 
         return anyItem;
     }
@@ -591,7 +594,7 @@ public partial class GamesManager : Page
         }
         else
         {
-            throw new NullControlException("Textbox da cui ricavare il testo inesistente");
+            throw new ArgumentNullException("tbox","Textbox da cui ricavare il testo inesistente");
         }
     }
 
@@ -603,7 +606,7 @@ public partial class GamesManager : Page
         }
         else
         {
-            throw new NullControlException("Textbox da settare inesistente");
+            throw new ArgumentNullException("tbox","Textbox da settare inesistente");
         }
     }
 
@@ -619,13 +622,13 @@ public partial class GamesManager : Page
                 }
                 else
                 {
-                    throw new NullControlException("Textbox da resettare inesistente");
+                    throw new ArgumentException("Textbox da resettare inesistente");
                 }
             }
         }
         else
         {
-            throw new NullControlException("Insieme di textboxes da resettare inesistente");
+            throw new ArgumentNullException("tboxes","Insieme di textboxes da resettare inesistente");
         }
     }
 
@@ -685,7 +688,7 @@ public partial class GamesManager : Page
         }
         else
         {
-            throw new NullControlException("L'insieme di controls risulta inesistente");
+            throw new ArgumentNullException("controls","L'insieme di controls risulta inesistente");
         }
     }
 
@@ -697,7 +700,7 @@ public partial class GamesManager : Page
         }
         else
         {
-            throw new NullControlException("Il control risulta inesistente");
+            throw new ArgumentNullException("control","Il control risulta inesistente");
         }
     }
 
@@ -709,7 +712,7 @@ public partial class GamesManager : Page
         }
         else
         {
-            throw new NullUIParameterException("Il parametro \"classeCss\" non è valido");
+            throw new ArgumentException("classeCss","Il parametro \"classeCss\" non è valido");
         }
     }
 
