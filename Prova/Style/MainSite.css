@@ -1,4 +1,25 @@
-﻿body {
+﻿#footer {
+    color: #fff;
+    font-size: 14px;
+    background: #111;
+}
+
+.navbar {
+    display: flex;
+    min-height: 5vh;
+    max-height: 20vh;
+}
+
+    .navbar .nav-item {
+        padding: 0;
+    }
+
+body {
+    background-color: cornflowerblue;
+}
+
+main {
+    background-color: white;
 }
 
 .switch {
@@ -13,6 +34,16 @@
         opacity: 0;
         width: 0;
         height: 0;
+    }
+
+.logo {
+    background-color: #4e73df;
+    color: #FFFFFF;
+
+}
+
+    .logo .logo-image {
+                                                                                                             
     }
 
 /* The slider */
@@ -62,3 +93,80 @@ input:checked + .slider:before {
     .slider.round:before {
         border-radius: 50%;
     }
+
+/*Game cards*/
+
+.game-card {
+    border: 2px solid black;
+    background-position-y: bottom;
+    background-size: 100% 90%;
+}
+
+.vertical-card {
+    flex-direction: row;
+    display: flex;
+}
+
+.ps2-cover {
+    width: 100%;
+    height: 15%;
+}
+
+    .ps2-cover > img {
+        content: url("Immagini/Cover_Templates/ps2.png");
+    }
+
+.list-view-area {
+    border: 2px solid black;
+    box-shadow: 1px 2px 15px #0006 inset;
+    margin: auto;
+    max-height: 50%;
+    width: 95%;
+}
+
+.upload-list-view-header {
+    background-color: #375B76;
+    color: #FFFFFF;
+    font-weight: bold;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+}
+
+.lv-row {
+    background-color: #E7E7FF;
+    color: #4A3C8C;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    height: fit-content;
+    transition: 0.3s;
+}
+
+.alt {
+    background-color: snow;
+    color: black;
+}
+
+.lv-imgbtn {
+    border-left: 1px solid black;
+    transition: 0.3s;
+}
+
+    .lv-imgbtn:hover {
+        border: 4px solid #9be3ff;
+        cursor: zoom-in;
+    }
+
+.lv-selection {
+    background-color: #4f53fc;
+    color: #FFFFFF;
+    font-weight: bold;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+}
+
+.lv-row:hover {
+    background-color: #4f53fc;
+    color: #FFFFFF;
+    text-decoration: none;
+    cursor: pointer;
+}

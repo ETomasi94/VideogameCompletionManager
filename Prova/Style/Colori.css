@@ -1,0 +1,134 @@
+﻿/*Ocean colors*/
+.foam-bg {
+    background-color: #F0FCFF;
+}
+
+.foam-txt {
+    color: #F0FCFF;
+}
+
+.calmsky-dark-bg {
+    background-color: #74bcff;
+}
+
+.calmsky-dark-txt {
+    color: #74bcff;
+}
+
+.calmsky-med-bg {
+    background-color: #9be3ff;
+}
+
+.calmsky-med-txt {
+    color: #9be3ff;
+}
+
+.calmsky-decise-bg {
+    background-color: #c9e9f6;
+}
+
+.calmsky-decise-txt {
+    color: #c9e9f6;
+}
+
+.calmsky-light-bg {
+    background-color: #d1f0ff;
+}
+
+.calmsky-light-txt {
+    color: #d1f0ff;
+}
+
+/*Sand colors*/
+
+.sand-darkest-bg {
+    background-color: #c3b87c;
+}
+
+.sand-darkest-txt {
+    color: #c3b87c;
+}
+
+.sand-dark-bg {
+    background-color: #eabf7d;
+}
+
+.sand-dark-txt {
+    color: #eabf7d;
+}
+
+.sand-medium-bg {
+    background-color: #e5d890;
+}
+
+.sand-medium-txt {
+    color: #e5d890;
+}
+
+.sand-light-bg {
+    background-color: #fddda0;
+}
+
+.sand-light-txt {
+    color: #fddda0;
+}
+
+.sand-lightest-bg {
+    background-color: #eae1b0;
+}
+
+.sand-lightest-txt {
+    color: #eae1b0;
+}
+
+.golden-light {
+    background-color: #edc98a;
+}
+
+.coral {
+    background-color: #ff9f7c;
+}
+
+.coral-text {
+    color: #FF7F50;
+}
+
+.bright-orange-text {
+    color: #FFAC1C;
+}
+
+.green-page-bg {
+    background-color: #008514;
+}
+
+.green-page-txt {
+    color: #008514;
+}
+
+.pale-green-bg {
+    background-color: #F0FFF0;
+}
+
+.pale-green-txt {
+    color: #F0FFF0;
+}
+
+.white-bg {
+    background-color: white;
+}
+
+.white-txt {
+    color: white;
+}
+
+.alabaster-bg {
+    background-color: #F7FAF7;
+}
+
+.alabaster-txt {
+    color: #F7FAF7;
+}
+
+.black-txt {
+    color: black;
+}
