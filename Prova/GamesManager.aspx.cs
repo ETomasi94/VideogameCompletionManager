@@ -14,6 +14,8 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Globalization;
 
+
+
 public partial class GamesManager : Page
 {
     protected void Page_Load(object sender, EventArgs e)
@@ -290,24 +292,7 @@ public partial class GamesManager : Page
         return stringBuilder;
     }
 
-    //DROPDOWN LISTS
-    private void RiempiDropDownListOrd(DropDownList dropDownList, DataSet source)
-    {
-        if (dropDownList != null)
-        {
-            dropDownList.Visible = true;
 
-            dropDownList.Items.Clear();
-
-            foreach (DataColumn column in source.Tables[0].Columns)
-            {
-                ListItem annoItem = new ListItem();
-                annoItem.Text = annoItem.Value = column.Caption;
-
-                dropDownList.Items.Add(annoItem);
-            }
-        }
-    }
 
     private void RiempiDropDownListAnni(int annoMin, int annoMax, params DropDownList[] dropDownLists)
     {
@@ -408,32 +393,6 @@ public partial class GamesManager : Page
                 dropDownList.Items.Add(CreateANYElement());
             }
         }
-    }
-
-    private void RimuoviTutteDaConsoleDropdown()
-    {
-        foreach (ListItem item in ConsoleSelection.Items)
-        {
-            if (item.Value.Equals("ANY"))
-            {
-                item.Enabled = false;
-                break;
-            }
-        }
-    }
-
-    private void AggiungiTutteAConsoleDropDown()
-    {
-        foreach (ListItem item in ConsoleSelection.Items)
-        {
-            if (item.Value.Equals("ANY"))
-            {
-                item.Enabled = true;
-                break;
-            }
-        }
-
-        ConsoleSelection.SelectedIndex = 0;
     }
 
     private void SelectANYElement(bool cond, params DropDownList[] dropDownLists)
@@ -586,18 +545,6 @@ public partial class GamesManager : Page
         }
     }
 
-    private String RiceviTesto(TextBox tbox)
-    {
-        if (EsisteControl(tbox))
-        {
-            return tbox.Text;
-        }
-        else
-        {
-            throw new ArgumentNullException("tbox","Textbox da cui ricavare il testo inesistente");
-        }
-    }
-
     private void SettaTextbox(TextBox tbox, string outputText)
     {
         if (EsisteControl(tbox))
@@ -631,40 +578,6 @@ public partial class GamesManager : Page
             throw new ArgumentNullException("tboxes","Insieme di textboxes da resettare inesistente");
         }
     }
-
-    //MODES
-
-    private void SetQueryMode()
-    {
-        CambiaVisibilitaControls(true, TrovaControlsPerClasseCss("QueryExclusive"));
-        CambiaVisibilitaControls(false, TrovaControlsPerClasseCss("InsertionExclusive"));
-
-        CambiaVisibilitaControls(Checked(YearInterval), YearTo);
-        CambiaVisibilitaControls(Checked(MonthInterval), MonthTo);
-        CambiaVisibilitaControls(Checked(DayInterval), DayTo);
-        CambiaVisibilitaControls(Checked(HourInterval), HourTo);
-
-        CambiaVisibilitaControls(Unchecked(exactMatchCheckBox), FirstLettersCheckbox);
-
-        CambiaVisibilitaControls(Unchecked(FirstLettersCheckbox), Titolo, TitleLabel, exactMatchCheckBox);
-
-        ConfiguraLabel(TitleLabel, Checked(exactMatchCheckBox), "Titolo esatto: ", "Titolo: ");
-
-        AggiungiTutteAConsoleDropDown();
-    }
-
-    private void SetModifyMode()
-    {
-        CambiaVisibilitaControls(false, TrovaControlsPerClasseCss("QueryExclusive"));
-        CambiaVisibilitaControls(true, TrovaControlsPerClasseCss("InsertionExclusive"));
-
-        CambiaVisibilitaControls(true, Titolo, TitleLabel);
-
-        ConfiguraLabel(TitleLabel, true, "Titolo: ");
-
-        RimuoviTutteDaConsoleDropdown();
-    }
-
 
     //GENERIC CONTROLS
     private void CambiaVisibilitaControls(bool value, params WebControl[] controls)
@@ -712,7 +625,7 @@ public partial class GamesManager : Page
         }
         else
         {
-            throw new ArgumentException("classeCss","Il parametro \"classeCss\" non è valido");
+            throw new ArgumentException("Il parametro \"classeCss\" non è valido", "classeCss");
         }
     }
 
