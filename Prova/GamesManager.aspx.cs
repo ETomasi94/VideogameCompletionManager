@@ -10,6 +10,9 @@ using System.Text;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Globalization;
 
 public partial class GamesManager : Page
 {
@@ -23,11 +26,6 @@ public partial class GamesManager : Page
             RiempiDropDownListGiorni(DayFrom, DayTo);
             RiempiDropDownListOre(HourFrom, HourTo);
         }
-    }
-
-    protected void CompletionStatingStart_Click(object sender, EventArgs e)
-    {
-        SettaLabel(StatingLabel, "Decidi una combinazione di tasti");
     }
 
     public void QueryButton_Click(Object sender, EventArgs e)
@@ -131,12 +129,7 @@ public partial class GamesManager : Page
 
         stringBuilder = GenerateWHERETitle(stringBuilder);
 
-        stringBuilder = GenerateWHERENotes(stringBuilder, CompletionNotesTextBox.Text.Split(separators, StringSplitOptions.RemoveEmptyEntries).ToArray());
 
-        foreach (string note in CompletionNotesTextBox.Text.Split(separators, StringSplitOptions.RemoveEmptyEntries).ToArray())
-        {
-            Debug.WriteLine(note);
-        }
 
         stringBuilder = GenerateWHEREConsole(stringBuilder);
 
@@ -145,44 +138,6 @@ public partial class GamesManager : Page
         Debug.WriteLine(stringBuilder.ToString());
 
         return stringBuilder.ToString();
-    }
-
-    private StringBuilder GenerateWHERENotes(StringBuilder stringBuilder, params string[] notes)
-    {
-        if (stringBuilder != null)
-        {
-            if (!RiceviTesto(CompletionNotesTextBox).Equals(String.Empty))
-            {
-                foreach (string note in notes)
-                {
-                    if (stringBuilder.ToString().Contains("WHERE"))
-                    {
-                        stringBuilder.Append(" and ").Append("Note LIKE " + "'%" + note + "%'");
-                    }
-                    else
-                    {
-                        stringBuilder.Append("WHERE ").Append("Note LIKE  " + "'%" + note + "%'");
-                    }
-                }
-            }
-
-            if (Checked(completionCheckBox))
-            {
-                if (stringBuilder.ToString().Contains("WHERE"))
-                {
-                    return stringBuilder.Append(" and ").Append("Note LIKE " + "'%100%'");
-                }
-                else
-                {
-                    return stringBuilder.Append("WHERE ").Append("Note LIKE " + "'%100%'");
-                }
-            }
-            else
-            {
-                return stringBuilder;
-            }
-        }
-        return null;
     }
 
     private StringBuilder GenerateWHERETitle(StringBuilder stringBuilder)
@@ -675,17 +630,6 @@ public partial class GamesManager : Page
     }
 
     //MODES
-    public void SwitchMode(object sender, EventArgs e)
-    {
-        if (IsInModifyMode())
-        {
-            SetModifyMode();
-        }
-        else
-        {
-            SetQueryMode();
-        }
-    }
 
     private void SetQueryMode()
     {
@@ -697,11 +641,9 @@ public partial class GamesManager : Page
         CambiaVisibilitaControls(Checked(DayInterval), DayTo);
         CambiaVisibilitaControls(Checked(HourInterval), HourTo);
 
-        CambiaVisibilitaControls(false, FirstLettersLabel);
         CambiaVisibilitaControls(Unchecked(exactMatchCheckBox), FirstLettersCheckbox);
 
         CambiaVisibilitaControls(Unchecked(FirstLettersCheckbox), Titolo, TitleLabel, exactMatchCheckBox);
-        CambiaVisibilitaControls(Checked(FirstLettersCheckbox), FirstLettersLabel);
 
         ConfiguraLabel(TitleLabel, Checked(exactMatchCheckBox), "Titolo esatto: ", "Titolo: ");
 
@@ -720,15 +662,6 @@ public partial class GamesManager : Page
         RimuoviTutteDaConsoleDropdown();
     }
 
-    private bool IsInModifyMode()
-    {
-        return ModeCheckbox.Checked;
-    }
-
-    private bool IsInQueryMode()
-    {
-        return !ModeCheckbox.Checked;
-    }
 
     //GENERIC CONTROLS
     private void CambiaVisibilitaControls(bool value, params WebControl[] controls)
@@ -795,15 +728,16 @@ public partial class GamesManager : Page
         return (s != null);
     }
 
-    private string GeneraCodiceCompletamento(int idEdizione, DateTime dataCompletamento)
+    private string GeneraCodiceCompletamento(int idEdizione,DateTime dataCompletamento)
     {
         StringBuilder sbuilder = new StringBuilder();
 
         Random randomizer = new Random();
 
-        string comandoSelezioneAttributi = "SELECT t.Titolo, ed.SiglaConsole" +
+        string comandoSelezioneAttributi = "SELECT t.Titolo, ed.SiglaConsole " +
                                            "FROM Edizioni ed " +
-                                           "INNER JOIN Titoli t ON ed.IDTitolo = t.IDTitolo";
+                                           "INNER JOIN Titoli t ON ed.IDTitolo = t.IDTitolo " +
+                                           "WHERE ed.IDEdizione = "+idEdizione;
 
         OleDbCommand comandoSelezione = DbConnectionUtils.CreateCommand(CommandType.Text, comandoSelezioneAttributi);
 
@@ -815,7 +749,7 @@ public partial class GamesManager : Page
         string consoleGioco = informazioniGioco.Rows[0]["SiglaConsole"].ToString();
         string annoCompletamento = dataCompletamento.Year.ToString().Substring(1);
 
-        string fineCodice = consoleGioco.Substring(consoleGioco.Length, -2) + annoCompletamento;
+        string fineCodice = consoleGioco.Substring(1,2) + annoCompletamento;
 
         for (int i = 0; i < 10; i++)
         {
@@ -827,9 +761,62 @@ public partial class GamesManager : Page
         return sbuilder.ToString().ToUpper();
     }
 
-    protected void CambiaGiocoDaCompletare(object sender, EventArgs e)
+    private void ImpostaCopertina(int i)
+    {
+            byte[] immagine = File.ReadAllBytes("C:\\Users\\enryr\\Desktop\\Cover templates\\" + i + ".jpg");
+
+            string command = "UPDATE Edizioni SET [Immagine] = @Immagine WHERE [IDEdizione] = @IDGioco";
+
+            OleDbCommand comandoModifica = DbConnectionUtils.CreateCommand(CommandType.Text, command);
+            comandoModifica.Parameters.AddWithValue("@Immagine", immagine);
+            comandoModifica.Parameters.AddWithValue("@IDGioco", i);
+
+            GestoreDati.Interagisci(GetConnectionString(), comandoModifica);
+    }
+
+    protected void ImpostaCopertina(object sender, EventArgs e)
     {
 
+        int idGioco = Convert.ToInt32(notCompletedDropDownList.SelectedValue);
+
+        if (idGioco > 0 && imageUpload.HasFile)
+        {
+            string fileName = Path.GetFileName(imageUpload.FileName);
+            string fileExtension = Path.GetExtension(fileName);
+
+            byte[] byteImmagine;
+
+            using (var binaryReader = new BinaryReader(imageUpload.PostedFile.InputStream))
+            {
+                byteImmagine = binaryReader.ReadBytes(imageUpload.PostedFile.ContentLength);
+            }
+
+            string command = "UPDATE Edizioni SET [Immagine] = @Immagine WHERE [IDEdizione] = @IDGioco";
+
+            OleDbCommand comandoModifica = DbConnectionUtils.CreateCommand(CommandType.Text, command);
+            comandoModifica.Parameters.AddWithValue("@Immagine", byteImmagine);
+            comandoModifica.Parameters.AddWithValue("@IDGioco", idGioco);
+
+            GestoreDati.Interagisci(GetConnectionString(), comandoModifica);
+        }
+    }
+
+    protected void CambiaGiocoDaCompletare(object sender, EventArgs e)
+    {
+        int idGiocoDaCompletare = Convert.ToInt32(notCompletedDropDownList.SelectedValue);
+
+        string command = "SELECT e.Immagine FROM Edizioni e WHERE e.IDEdizione = " + idGiocoDaCompletare;
+
+        OleDbCommand comandoSelezione = DbConnectionUtils.CreateCommand(CommandType.Text, command);
+
+        System.Data.DataTable immagineDatabase = GestoreDati.ATabella(GetConnectionString(), comandoSelezione);
+
+        if (immagineDatabase.Rows.Count > 0 && !String.IsNullOrEmpty(immagineDatabase.Rows[0]["Immagine"].ToString()))
+        {
+            byte[] immagineCopertina = (byte[])immagineDatabase.Rows[0]["Immagine"];
+
+            gameCover.ImageUrl = "data:image/png;base64," + Convert.ToBase64String(immagineCopertina, 0, immagineCopertina.Length);
+        }
     }
 
     protected void ImpostaDataCorrente(object sender, EventArgs e)
@@ -844,13 +831,13 @@ public partial class GamesManager : Page
 
     protected void InserisciCompletamento(object sender, EventArgs e)
     {
-        int editionID = Convert.ToInt32(completedDropDownList.SelectedValue);
+        int editionID = Convert.ToInt32(notCompletedDropDownList.SelectedValue);
 
-        DateTime completionDate = DateTime.Parse(completionDateTextbox.Text);
+        DateTime completionDate = DateTime.Parse(completionDateTextbox.Text + " " + completionHourTextbox.Text + ":" + completionMinuteTextbox.Text + ":" + completionSecondTextbox.Text,CultureInfo.CurrentCulture,DateTimeStyles.None);
 
-        string codiceGioco = GeneraCodiceCompletamento(editionID, completionDate);
+        string codiceGioco = GeneraCodiceCompletamento(editionID,completionDate);
 
-        if (InformazioniCompletamentoCompilate() && (codiceGioco.Length == 15))
+        if (InformazioniCompletamentoCompilate() && (codiceGioco.Length >= 15))
         {
             string dateString = completionDate.ToString("dd/MM/yyyy");
             string hourString = completionDate.ToString("HH:mm:ss");
@@ -862,10 +849,20 @@ public partial class GamesManager : Page
             bool totalComplete = completionCheckBox.Checked;
 
 
-            string sqlCommand = "INSERT INTO Completamenti(Codice, IDEdizione, Data, Ora, GiornoDellaSettimana, Finale, Cento per cento, Note) " +
-                                "VALUES ( '" + codiceGioco + "'," + editionID + ",'" + dateString + "','" + hourString + "','" + dayOfWeek + "','" + ending + "'," + totalComplete + "'" + notes + "')";
+            string command = "INSERT INTO Completamenti ([Codice],[IDEdizione],[Data],[Ora],[GiornoDellaSettimana],[Finale],[Cento per cento],[Note]) " +
+                                "VALUES (@Codice,@Id,@DataCompl,@OraCompl,@GiornoSetCompl,@FinaleCompl,@Cento,@NoteCompl)";
 
+            OleDbCommand oleDbCommand = DbConnectionUtils.CreateCommand(CommandType.Text, command);
+            oleDbCommand.Parameters.AddWithValue("@Codice", codiceGioco);
+            oleDbCommand.Parameters.AddWithValue("@Id", editionID);
+            oleDbCommand.Parameters.AddWithValue("@DataCompl", dateString);
+            oleDbCommand.Parameters.AddWithValue("@OraCompl", hourString);
+            oleDbCommand.Parameters.AddWithValue("@GiornoSetCompl", dayOfWeek);
+            oleDbCommand.Parameters.AddWithValue("@FinaleCompl", ending);
+            oleDbCommand.Parameters.AddWithValue("@Cento", totalComplete);
+            oleDbCommand.Parameters.AddWithValue("@NoteCompl", notes);
 
+            GestoreDati.Interagisci(GetConnectionString(),oleDbCommand);
         }
     }
 
