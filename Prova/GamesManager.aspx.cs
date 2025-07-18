@@ -13,6 +13,7 @@ using System.Web.UI.WebControls;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Globalization;
+using System.Data.SqlClient;
 
 
 
@@ -20,94 +21,32 @@ public partial class GamesManager : Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
+        RiempiAnniPubblicazioneDDL();
+
         if (!IsPostBack)
         {
+           
         }
     }
 
-    
-    /*public void QueryButton_Click(Object sender, EventArgs e)
+    public void QueryButton_Click(Object sender, EventArgs e)
     {
-        OleDbCommand comandoSelezione = DbConnectionUtils.CreateCommand(CommandType.Text, GenerateSqlCommand());
-
-        DataTable tuttiIGiochi = GestoreDati.ATabella(GetConnectionString(), comandoSelezione);
-
-        GrigliaVideogiochi.DataSource = tuttiIGiochi;
-        GrigliaVideogiochi.DataBind();
     }
 
-    public void ActualDateButton_Click(object sender, EventArgs e)
+    private void RiempiAnniPubblicazioneDDL()
     {
-        DateTime dateTime = DateTime.Now;
-    }
+        string commandoAnnoMin = "SELECT MIN(YEAR(Ed.DataRilascio)) FROM Edizioni ed";
+        OleDbCommand comandoSelezione =  DbConnectionUtils.CreateCommand(CommandType.Text, commandoAnnoMin);
 
-    public void FirstLettersCheckbox_OnCheckedChange(object sender, EventArgs e)
-    {
-        ConfiguraLabel(TitleLabel, Checked(FirstLettersCheckbox), "Iniziali del titolo: ", "Titolo: ");
-    }
+        int annoMin = Convert.ToInt32(GestoreDati.ATabella(GetConnectionString(), comandoSelezione).Rows[0][0]);
 
-    public void ExactMatchCheckBox_OnCheckedChange(object sender, EventArgs e)
-    {
-        CambiaVisibilitaControls(!exactMatchCheckBox.Checked, FirstLettersCheckbox);
-
-        ConfiguraLabel(TitleLabel, exactMatchCheckBox.Checked, "Titolo esatto: ", "Titolo: ");
-    }
-
-    public void ReleaseYearInterval_OnCheckedChange(object sender, EventArgs e)
-    {
-        CambiaVisibilitaControls(ReleaseYearInterval.Checked, ReleaseYearTo);
-        SelectANYElement(!ReleaseYearInterval.Checked, ReleaseYearTo);
-    }
-
-    public void YearInterval_OnCheckedChange(object sender, EventArgs e)
-    {
-        CambiaVisibilitaControls(YearInterval.Checked, YearTo);
-        SelectANYElement(!YearInterval.Checked, YearTo);
-    }
-
-    public void MonthInterval_OnCheckedChange(Object sender, EventArgs e)
-    {
-        CambiaVisibilitaControls(MonthInterval.Checked, MonthTo);
-        SelectANYElement(!MonthInterval.Checked, MonthTo);
-    }
-
-    public void DayInterval_OnCheckedChange(Object sender, EventArgs e)
-    {
-        CambiaVisibilitaControls(DayInterval.Checked, DayTo);
-        SelectANYElement(!DayInterval.Checked, DayTo);
-    }
-
-    public void HourInterval_OnCheckedChange(Object sender, EventArgs e)
-    {
-        CambiaVisibilitaControls(HourInterval.Checked, HourTo);
-        SelectANYElement(!HourInterval.Checked, HourTo);
-    }
-
-    public void InsertionButton_Click(object sender, EventArgs e)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void UploadButton_Click(Object sender, EventArgs e)
-    {
-        string sqlCommand = "SELECT * FROM Videogiochi ORDER BY ID";
-
-        OleDbCommand comandoSelezione = DbConnectionUtils.CreateCommand(CommandType.Text, sqlCommand);
-
-        int minYear = DateTime.Now.Year;
-        int maxYear = DateTime.Now.Year;
-
-        DataTable tabellaVideogiochi = GestoreDati.ATabella(GetConnectionString(), comandoSelezione);
-
-        foreach (DataRow dr in tabellaVideogiochi.Rows)
+        for(int i=annoMin; i<=DateTime.Now.Year; i++)
         {
-            DateTime data = dr.Field<DateTime>("Data");
+            ListItem item = new ListItem(i.ToString(), i.ToString());
 
-            minYear = Math.Min(minYear, data.Year);
-            maxYear = Math.Max(maxYear, data.Year);
+            ReleaseYearFrom.Items.Add(item);
+            ReleaseYearTo.Items.Add(item);  
         }
-
-        RiempiDropDownListAnni(minYear, maxYear, YearFrom, YearTo);
     }
 
     //QUERY
@@ -115,10 +54,6 @@ public partial class GamesManager : Page
     {
         char[] separators = new char[] { ',', '.', '\\', '/', ' ' };
         StringBuilder stringBuilder = new StringBuilder("SELECT * FROM Videogiochi ");
-
-        stringBuilder = GenerateWHEREDate(Checked(YearInterval), stringBuilder, YearFrom, YearTo, SQLFunzioniTime.YEAR);
-        stringBuilder = GenerateWHEREDate(Checked(MonthInterval), stringBuilder, MonthFrom, MonthTo, SQLFunzioniTime.MONTH);
-        stringBuilder = GenerateWHEREDate(Checked(DayInterval), stringBuilder, DayFrom, DayTo, SQLFunzioniTime.DAY);
 
         stringBuilder = GenerateWHERETitle(stringBuilder);
 
@@ -143,7 +78,7 @@ public partial class GamesManager : Page
             }
             else
             {
-                if (Checked(exactMatchCheckBox))
+                if (titleSearchRadioButtons.SelectedValue.Equals("Identico"))
                 {
                     if (stringBuilder.ToString().Contains("WHERE"))
                     {
@@ -154,7 +89,7 @@ public partial class GamesManager : Page
                         return stringBuilder.Append("WHERE ").Append("Titolo = " + "'" + Titolo.Text + "'");
                     }
                 }
-                else if (Checked(FirstLettersCheckbox))
+                else if (titleSearchRadioButtons.SelectedValue.Equals("Iniziali"))
                 {
                     if (stringBuilder.ToString().Contains("WHERE"))
                     {
@@ -211,7 +146,6 @@ public partial class GamesManager : Page
 
         return stringBuilder;
     }
-    */
 
     private StringBuilder GenerateWHEREDate(bool IsInterval, StringBuilder stringBuilder, DropDownList firstDDL, DropDownList secondDDL, SQLFunzioniTime timeFunction)
     {
@@ -283,97 +217,6 @@ public partial class GamesManager : Page
             }
         }
     }
-
-
-    private void RiempiDropDownListAnni(int annoMin, int annoMax, params DropDownList[] dropDownLists)
-    {
-        foreach (DropDownList dropDownList in dropDownLists)
-        {
-            if (dropDownList != null)
-            {
-                dropDownList.Items.Clear();
-
-                dropDownList.Items.Add(CreateANYElement());
-
-                for (int i = annoMin; i <= annoMax; i++)
-                {
-                    ListItem annoItem = new ListItem();
-                    annoItem.Text = annoItem.Value = i.ToString();
-
-                    dropDownList.Items.Add(annoItem);
-                }
-            }
-        }
-    }
-
-    private void RiempiDropDownListMesi(params DropDownList[] dropDownLists)
-    {
-        foreach (DropDownList dropDownList in dropDownLists)
-        {
-            if (dropDownList != null)
-            {
-                dropDownList.Items.Clear();
-
-                dropDownList.Items.Add(CreateANYElement());
-
-                for (int i = 1; i <= 12; i++)
-                {
-                    ListItem meseItem = new ListItem
-                    {
-                        Value = i.ToString(),
-                        Text = ((Mesi)i).ToString()
-                    };
-
-                    dropDownList.Items.Add(meseItem);
-                }
-            }
-        }
-    }
-
-    private void RiempiDropDownListGiorni(params DropDownList[] dropDownLists)
-    {
-        foreach (DropDownList dropDownList in dropDownLists)
-        {
-            if (dropDownList != null)
-            {
-                dropDownList.Items.Clear();
-
-                dropDownList.Items.Add(CreateANYElement());
-
-                for (int i = 1; i <= 31; i++)
-                {
-                    ListItem giornoItem = new ListItem();
-                    giornoItem.Value = giornoItem.Text = i.ToString();
-
-
-                    dropDownList.Items.Add(giornoItem);
-                }
-            }
-        }
-    }
-
-    private void RiempiDropDownListOre(params DropDownList[] dropDownLists)
-    {
-        foreach (DropDownList dropDownList in dropDownLists)
-        {
-            if (dropDownList != null)
-            {
-                dropDownList.Items.Clear();
-
-                dropDownList.Items.Add(CreateANYElement());
-
-                for (int i = 0; i <= 23; i++)
-                {
-                    ListItem oraItem = new ListItem();
-                    oraItem.Value = oraItem.Text = i.ToString();
-
-
-                    dropDownList.Items.Add(oraItem);
-                }
-            }
-        }
-    }
-
     private void ResettaDropDownList(params DropDownList[] dropDownLists)
     {
         foreach (DropDownList dropDownList in dropDownLists)
@@ -544,7 +387,7 @@ public partial class GamesManager : Page
         }
         else
         {
-            throw new ArgumentNullException("tbox","Textbox da settare inesistente");
+            throw new ArgumentNullException("tbox", "Textbox da settare inesistente");
         }
     }
 
@@ -566,7 +409,7 @@ public partial class GamesManager : Page
         }
         else
         {
-            throw new ArgumentNullException("tboxes","Insieme di textboxes da resettare inesistente");
+            throw new ArgumentNullException("tboxes", "Insieme di textboxes da resettare inesistente");
         }
     }
 
@@ -592,7 +435,7 @@ public partial class GamesManager : Page
         }
         else
         {
-            throw new ArgumentNullException("controls","L'insieme di controls risulta inesistente");
+            throw new ArgumentNullException("controls", "L'insieme di controls risulta inesistente");
         }
     }
 
@@ -604,7 +447,7 @@ public partial class GamesManager : Page
         }
         else
         {
-            throw new ArgumentNullException("control","Il control risulta inesistente");
+            throw new ArgumentNullException("control", "Il control risulta inesistente");
         }
     }
 
@@ -635,7 +478,7 @@ public partial class GamesManager : Page
         return (s != null);
     }
 
-    private string GeneraCodiceCompletamento(int idEdizione,DateTime dataCompletamento)
+    private string GeneraCodiceCompletamento(int idEdizione, DateTime dataCompletamento)
     {
         StringBuilder sbuilder = new StringBuilder();
 
@@ -644,7 +487,7 @@ public partial class GamesManager : Page
         string comandoSelezioneAttributi = "SELECT t.Titolo, ed.SiglaConsole " +
                                            "FROM Edizioni ed " +
                                            "INNER JOIN Titoli t ON ed.IDTitolo = t.IDTitolo " +
-                                           "WHERE ed.IDEdizione = "+idEdizione;
+                                           "WHERE ed.IDEdizione = " + idEdizione;
 
         OleDbCommand comandoSelezione = DbConnectionUtils.CreateCommand(CommandType.Text, comandoSelezioneAttributi);
 
@@ -656,7 +499,9 @@ public partial class GamesManager : Page
         string consoleGioco = informazioniGioco.Rows[0]["SiglaConsole"].ToString();
         string annoCompletamento = dataCompletamento.Year.ToString().Substring(1);
 
-        string fineCodice = consoleGioco.Substring(1,2) + annoCompletamento;
+        string sottoStringa = consoleGioco.Length > 2 ? consoleGioco.Substring(1, 2) : consoleGioco;
+
+        string fineCodice = sottoStringa + annoCompletamento;
 
         for (int i = 0; i < 10; i++)
         {
@@ -670,15 +515,15 @@ public partial class GamesManager : Page
 
     private void ImpostaCopertina(int i)
     {
-            byte[] immagine = File.ReadAllBytes("C:\\Users\\enryr\\Desktop\\Cover templates\\" + i + ".jpg");
+        byte[] immagine = File.ReadAllBytes("C:\\Users\\enryr\\Desktop\\Cover templates\\" + i + ".jpg");
 
-            string command = "UPDATE Edizioni SET [Immagine] = @Immagine WHERE [IDEdizione] = @IDGioco";
+        string command = "UPDATE Edizioni SET [Immagine] = @Immagine WHERE [IDEdizione] = @IDGioco";
 
-            OleDbCommand comandoModifica = DbConnectionUtils.CreateCommand(CommandType.Text, command);
-            comandoModifica.Parameters.AddWithValue("@Immagine", immagine);
-            comandoModifica.Parameters.AddWithValue("@IDGioco", i);
+        OleDbCommand comandoModifica = DbConnectionUtils.CreateCommand(CommandType.Text, command);
+        comandoModifica.Parameters.AddWithValue("@Immagine", immagine);
+        comandoModifica.Parameters.AddWithValue("@IDGioco", i);
 
-            GestoreDati.Interagisci(GetConnectionString(), comandoModifica);
+        GestoreDati.Interagisci(GetConnectionString(), comandoModifica);
     }
 
     protected void ImpostaCopertina(object sender, EventArgs e)
@@ -740,15 +585,15 @@ public partial class GamesManager : Page
     {
         int editionID = Convert.ToInt32(notCompletedDropDownList.SelectedValue);
 
-        DateTime completionDate = DateTime.Parse(completionDateTextbox.Text + " " + completionHourTextbox.Text + ":" + completionMinuteTextbox.Text + ":" + completionSecondTextbox.Text,CultureInfo.CurrentCulture,DateTimeStyles.None);
+        DateTime completionDate = DateTime.Parse(completionDateTextbox.Text + " " + completionHourTextbox.Text + ":" + completionMinuteTextbox.Text + ":" + completionSecondTextbox.Text, CultureInfo.CurrentCulture, DateTimeStyles.None);
 
-        string codiceGioco = GeneraCodiceCompletamento(editionID,completionDate);
+        string codiceGioco = GeneraCodiceCompletamento(editionID, completionDate);
 
         if (InformazioniCompletamentoCompilate() && (codiceGioco.Length >= 15))
         {
-            string dateString = completionDate.ToString("dd/MM/yyyy");
-            string hourString = completionDate.ToString("HH:mm:ss");
-            string dayOfWeek = completionDate.DayOfWeek.ToString();
+            string dateString = completionDate.ToString("dd/MM/yyyy", new CultureInfo("it-IT"));
+            string hourString = completionDate.ToString("HH:mm:ss", new CultureInfo("it-IT"));
+            string dayOfWeek = completionDate.ToString("dddd", new CultureInfo("it-IT"));
 
             string ending = endingTextbox.Text;
             string notes = notesTextbox.Text;
@@ -769,7 +614,7 @@ public partial class GamesManager : Page
             oleDbCommand.Parameters.AddWithValue("@Cento", totalComplete);
             oleDbCommand.Parameters.AddWithValue("@NoteCompl", notes);
 
-            GestoreDati.Interagisci(GetConnectionString(),oleDbCommand);
+            GestoreDati.Interagisci(GetConnectionString(), oleDbCommand);
         }
     }
 
@@ -788,7 +633,7 @@ public partial class GamesManager : Page
 
     protected void allCovers_Click(object sender, EventArgs e)
     {
-        for(int i=42; i<105; i++)
+        for (int i = 42; i < 105; i++)
         {
             ImpostaCopertina(i);
         }

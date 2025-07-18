@@ -9,41 +9,210 @@
         <asp:SqlDataSource ID="DaCompletare" runat="server" ConnectionString="<%$ ConnectionStrings:Games %>" ProviderName="<%$ ConnectionStrings:Games.ProviderName %>" SelectCommand="SELECT e.IDEdizione, t.Titolo, e.SiglaConsole FROM [Edizioni] e INNER JOIN [Titoli] t ON e.IDTitolo = t.IDTitolo WHERE e.IDEdizione NOT IN (SELECT c.IDEdizione FROM Completamenti c) ORDER BY [t.Titolo]"></asp:SqlDataSource>
         <asp:SqlDataSource ID="Completati" runat="server" ConnectionString="<%$ ConnectionStrings:Games %>" ProviderName="<%$ ConnectionStrings:Games.ProviderName %>" SelectCommand="SELECT e.IDEdizione, t.Titolo, e.SiglaConsole FROM [Edizioni] e INNER JOIN [Titoli] t ON e.IDTitolo = t.IDTitolo WHERE e.IDEdizione IN (SELECT c.IDEdizione FROM Completamenti c) ORDER BY [t.Titolo]"></asp:SqlDataSource>
         <asp:SqlDataSource ID="AnniCompletati" runat="server" ConnectionString="<%$ ConnectionStrings:Games %>" ProviderName="<%$ ConnectionStrings:Games.ProviderName %>" SelectCommand="SELECT DISTINCT YEAR(c.Data) AS Anno FROM Completamenti c"></asp:SqlDataSource>
+
         <asp:SqlDataSource ID="Completamenti"
             runat="server"
             ConnectionString="<%$ ConnectionStrings:Games %>"
             ProviderName="<%$ ConnectionStrings:Games.ProviderName %>"
             SelectCommand="SELECT [Titolo], [Nome], [Data], [Ora], [GiornoDellaSettimana], [Finale], [Cento per cento] AS Cento_per_cento, [Note], [Codice] FROM [Visualizzazione completa]"></asp:SqlDataSource>
 
-        <center>
-            <h1>
-                <b>I tuoi videogiochi
-                </b>
-            </h1>
-        </center>
+        <asp:SqlDataSource ID="Console"
+            runat="server"
+            ConnectionString="<%$ ConnectionStrings:Games %>"
+            ProviderName="<%$ ConnectionStrings:Games.ProviderName %>"
+            SelectCommand="SELECT [Sigla], [Nome] FROM [Console] ORDER BY [Nome]"></asp:SqlDataSource>
 
-        <hr />
-
-        <center>
-            <h2>Informazioni memorizzate</h2>
-        </center>
-
-        <ul>
-            <center>
-                <li>Titolo del videogioco</li>
-                <li>Data ed ora del completamento</li>
-                <li>Data di pubblicazione</li>
-                <li>Console su cui è stato completato il videogioco</li>
-                <li>F
-                    inale ottenuto al completamento</li>
-                <li>Nota sul completamento totale</li>
-                <li>Note sul completamento del videogioco</li>
-            </center>
-        </ul>
+        <h1 class="text-center">
+            <b>I tuoi videogiochi
+            </b>
+        </h1>
 
         <hr />
 
         <div class="container">
+            <asp:Label
+                runat="server"
+                CssClass="row mx-2 primary-text"
+                Font-Size="Medium"
+                Font-Bold="true"
+                Text="Data di completamento"></asp:Label>
+            <div class="row justify-content-around">
+
+                <div class="col-6 text-center">
+                    <asp:Label
+                        runat="server"
+                        CssClass="form-label"
+                        AssociatedControlID="dateFrom"
+                        Font-Size="Small"
+                        Font-Bold="true"
+                        Text="Data di inizio"></asp:Label>
+
+                </div>
+
+                <div class="col-6 text-center">
+                    <asp:Label
+                        runat="server"
+                        AssociatedControlID="dateTo"
+                        CssClass="form-label"
+                        Font-Size="Small"
+                        Font-Bold="true"
+                        Text="Data di fine"></asp:Label>
+
+                </div>
+            </div>
+
+            <div class="row justify-content-around border-bottom py-1">
+                <div class="col-6 justify-content-center">
+                    <asp:TextBox ID="dateFrom"
+                        runat="server"
+                        TextMode="DateTimeLocal"
+                        CssClass="custom-control mx-auto"></asp:TextBox>
+                </div>
+                <div class="col-6 text-center">
+                    <asp:TextBox ID="dateTo"
+                        runat="server" 
+                        TextMode="DateTimeLocal"
+                        CssClass="custom-control mx-auto"></asp:TextBox>
+                </div>
+            </div>
+
+
+            <div class="row text-center">
+                <div class="col-4">
+                    <asp:Label
+                        ID="ReleaseYearLabel"
+                        runat="server"
+                        Font-Size="Small"
+                        Font-Bold="true">Anno di pubblicazione: </asp:Label>
+                </div>
+                <div class="col-6">
+                    <asp:Label
+                        ID="ConsoleSelectionLabel"
+                        runat="server"
+                        AssociatedControlID="ConsoleSelection"
+                        Font-Size="Small"
+                        Font-Bold="true"
+                        Text="Console di gioco"></asp:Label>
+                </div>
+                <div class="col-2">
+                    <asp:Label
+                        ID="completionCheckboxLabel"
+                        runat="server"
+                        AssociatedControlID="completionCheckBox"
+                        Font-Size="Small"
+                        Font-Bold="true"
+                        Text="Completato al 100%"></asp:Label>
+                </div>
+            </div>
+
+            <div class="row text-center">
+                <div class="col-2">
+                    <asp:Label
+                        runat="server"
+                        AssociatedControlID="ReleaseYearFrom"
+                        Font-Size="Small"
+                        Text="Da"></asp:Label>
+                    <asp:DropDownList
+                        ID="ReleaseYearFrom"
+                        runat="server" />
+                </div>
+                <div class="col-2">
+                    <asp:Label
+                        runat="server"
+                        Font-Size="Small"
+                        AssociatedControlID="ReleaseYearTo"
+                        Text="A"></asp:Label>
+                    <asp:DropDownList
+                        ID="ReleaseYearTo"
+                        runat="server" />
+                </div>
+                <asp:DropDownList
+                    ID="ConsoleSelection"
+                    runat="server"
+                    AppendDataBoundItems="true"
+                    DataSourceID="Console"
+                    DataValueField="Sigla"
+                    DataTextField="Nome"
+                    name="Console di gioco"
+                    CssClass="col-6"
+                    size="1"
+                    TabIndex="1">
+                    <asp:ListItem Value="%%" Text="--Tutte le console--"></asp:ListItem>
+                </asp:DropDownList>
+                <div class="col-2">
+
+                    <asp:CheckBox
+                        runat="server"
+                        ID="completionCheckBox"></asp:CheckBox>
+
+                </div>
+            </div>
+
+        <hr />
+
+
+            <div class="row">
+                <div class="col-6 mx-1 text-center">
+                    <asp:Label
+                        ID="TitleLabel"
+                        runat="server"
+                        AssociatedControlID="Titolo"
+                        Font-Size="Small"
+                        Font-Bold="true"
+                        Text="Titolo"></asp:Label>
+                </div>
+                <div class="col-3 me-1 text-center">
+                    <asp:Label ID="OrderCriteriaLabel"
+                        runat="server"
+                        AssociatedControlID="OrderCriteriaDDL"
+                        Font-Size="Small"
+                        Font-Bold="true"
+                        Text="Ordinare per"></asp:Label>
+                </div>
+            </div>
+            <div class="row">
+                <asp:TextBox
+                    ID="Titolo"
+                    CssClass="col-6 mx-1"
+                    placeholder="Titolo"
+                    runat="server" />
+
+                <asp:DropDownList
+                    runat="server"
+                    ID="OrderCriteriaDDL"
+                    CssClass="col-3 me-1">
+                    <asp:ListItem Selected="True" Value="Data" Text="Data di completamento"></asp:ListItem>
+                    <asp:ListItem Selected="False" Value="Titolo" Text="Titolo"></asp:ListItem>
+                    <asp:ListItem Selected="False" Value="Console" Text="Console"></asp:ListItem>
+                </asp:DropDownList>
+
+                <asp:Button
+                    runat="server"
+                    ID="QueryButton"
+                    Text="Inizio Ricerca"
+                    CssClass="btn btn-main col-2 mx-2"
+                    OnClick="QueryButton_Click"
+                    AutoPostBack="true" />
+            </div>
+
+            <div class="row">
+
+                <asp:RadioButtonList
+                    ID="titleSearchRadioButtons"
+                    runat="server"
+                    Font-Size="Medium"
+                    CssClass="col-6 mx-1"
+                    RepeatLayout="Flow"
+                    RepeatDirection="Horizontal"
+                    CellSpacing="10">
+                    <asp:ListItem Selected="True" Text="Titolo simile" Value="Simile"></asp:ListItem>
+                    <asp:ListItem Selected="False" Text="Iniziali identiche" Value="Iniziali"></asp:ListItem>
+                    <asp:ListItem Selected="False" Text="Titolo Identico" Value="Identico"></asp:ListItem>
+                </asp:RadioButtonList>
+            </div>
+
+
+        <hr />
 
             <h1>
                 <center>
@@ -181,23 +350,30 @@
             <div class="container">
                 <asp:ListView ID="lvCompletamenti" runat="server" DataSourceID="Completamenti" GroupItemCount="3">
                     <AlternatingItemTemplate>
-                        <td runat="server" style="background-color: #FFFFFF;color: #284775;">Titolo:
+                        <td runat="server" style="background-color: #FFFFFF; color: #284775;">Titolo:
                             <asp:Label ID="TitoloLabel" runat="server" Text='<%# Eval("Titolo") %>' />
-                            <br />Nome:
+                            <br />
+                            Nome:
                             <asp:Label ID="NomeLabel" runat="server" Text='<%# Eval("Nome") %>' />
-                            <br />Data:
+                            <br />
+                            Data:
                             <asp:Label ID="DataLabel" runat="server" Text='<%# Eval("Data") %>' />
-                            <br />Ora:
+                            <br />
+                            Ora:
                             <asp:Label ID="OraLabel" runat="server" Text='<%# Eval("Ora") %>' />
-                            <br />GiornoDellaSettimana:
+                            <br />
+                            GiornoDellaSettimana:
                             <asp:Label ID="GiornoDellaSettimanaLabel" runat="server" Text='<%# Eval("GiornoDellaSettimana") %>' />
-                            <br />Finale:
+                            <br />
+                            Finale:
                             <asp:Label ID="FinaleLabel" runat="server" Text='<%# Eval("Finale") %>' />
                             <br />
                             <asp:CheckBox ID="Cento_per_centoCheckBox" runat="server" Checked='<%# Eval("Cento_per_cento") %>' Enabled="false" Text="Cento_per_cento" />
-                            <br />Note:
+                            <br />
+                            Note:
                             <asp:Label ID="NoteLabel" runat="server" Text='<%# Eval("Note") %>' />
-                            <br />Codice:
+                            <br />
+                            Codice:
                             <asp:Label ID="CodiceLabel" runat="server" Text='<%# Eval("Codice") %>' />
                             <br />
                         </td>
@@ -205,37 +381,45 @@
                     <EditItemTemplate>
                         <td runat="server" style="background-color: #999999;">Titolo:
                             <asp:TextBox ID="TitoloTextBox" runat="server" Text='<%# Bind("Titolo") %>' />
-                            <br />Nome:
+                            <br />
+                            Nome:
                             <asp:TextBox ID="NomeTextBox" runat="server" Text='<%# Bind("Nome") %>' />
-                            <br />Data:
+                            <br />
+                            Data:
                             <asp:TextBox ID="DataTextBox" runat="server" Text='<%# Bind("Data") %>' />
-                            <br />Ora:
+                            <br />
+                            Ora:
                             <asp:TextBox ID="OraTextBox" runat="server" Text='<%# Bind("Ora") %>' />
-                            <br />GiornoDellaSettimana:
+                            <br />
+                            GiornoDellaSettimana:
                             <asp:TextBox ID="GiornoDellaSettimanaTextBox" runat="server" Text='<%# Bind("GiornoDellaSettimana") %>' />
-                            <br />Finale:
+                            <br />
+                            Finale:
                             <asp:TextBox ID="FinaleTextBox" runat="server" Text='<%# Bind("Finale") %>' />
                             <br />
                             <asp:CheckBox ID="Cento_per_centoCheckBox" runat="server" Checked='<%# Bind("Cento_per_cento") %>' Text="Cento_per_cento" />
-                            <br />Note:
+                            <br />
+                            Note:
                             <asp:TextBox ID="NoteTextBox" runat="server" Text='<%# Bind("Note") %>' />
-                            <br />Codice:
+                            <br />
+                            Codice:
                             <asp:TextBox ID="CodiceTextBox" runat="server" Text='<%# Bind("Codice") %>' />
                             <br />
                             <asp:Button ID="UpdateButton" runat="server" CommandName="Update" Text="Aggiorna" />
                             <br />
                             <asp:Button ID="CancelButton" runat="server" CommandName="Cancel" Text="Annulla" />
-                            <br /></td>
+                            <br />
+                        </td>
                     </EditItemTemplate>
                     <EmptyDataTemplate>
-                        <table runat="server" style="background-color: #FFFFFF;border-collapse: collapse;border-color: #999999;border-style:none;border-width:1px;">
+                        <table runat="server" style="background-color: #FFFFFF; border-collapse: collapse; border-color: #999999; border-style: none; border-width: 1px;">
                             <tr>
                                 <td>Non è stato restituito alcun dato.</td>
                             </tr>
                         </table>
                     </EmptyDataTemplate>
                     <EmptyItemTemplate>
-<td runat="server" />
+                        <td runat="server" />
                     </EmptyItemTemplate>
                     <GroupTemplate>
                         <tr id="itemPlaceholderContainer" runat="server">
@@ -245,46 +429,61 @@
                     <InsertItemTemplate>
                         <td runat="server" style="">Titolo:
                             <asp:TextBox ID="TitoloTextBox" runat="server" Text='<%# Bind("Titolo") %>' />
-                            <br />Nome:
+                            <br />
+                            Nome:
                             <asp:TextBox ID="NomeTextBox" runat="server" Text='<%# Bind("Nome") %>' />
-                            <br />Data:
+                            <br />
+                            Data:
                             <asp:TextBox ID="DataTextBox" runat="server" Text='<%# Bind("Data") %>' />
-                            <br />Ora:
+                            <br />
+                            Ora:
                             <asp:TextBox ID="OraTextBox" runat="server" Text='<%# Bind("Ora") %>' />
-                            <br />GiornoDellaSettimana:
+                            <br />
+                            GiornoDellaSettimana:
                             <asp:TextBox ID="GiornoDellaSettimanaTextBox" runat="server" Text='<%# Bind("GiornoDellaSettimana") %>' />
-                            <br />Finale:
+                            <br />
+                            Finale:
                             <asp:TextBox ID="FinaleTextBox" runat="server" Text='<%# Bind("Finale") %>' />
                             <br />
                             <asp:CheckBox ID="Cento_per_centoCheckBox" runat="server" Checked='<%# Bind("Cento_per_cento") %>' Text="Cento_per_cento" />
-                            <br />Note:
+                            <br />
+                            Note:
                             <asp:TextBox ID="NoteTextBox" runat="server" Text='<%# Bind("Note") %>' />
-                            <br />Codice:
+                            <br />
+                            Codice:
                             <asp:TextBox ID="CodiceTextBox" runat="server" Text='<%# Bind("Codice") %>' />
                             <br />
                             <asp:Button ID="InsertButton" runat="server" CommandName="Insert" Text="Inserisci" />
                             <br />
                             <asp:Button ID="CancelButton" runat="server" CommandName="Cancel" Text="Cancella" />
-                            <br /></td>
+                            <br />
+                        </td>
                     </InsertItemTemplate>
                     <ItemTemplate>
-                        <td runat="server" style="background-color: #E0FFFF;color: #333333;">Titolo:
+                        <td runat="server" style="background-color: #E0FFFF; color: #333333;">Titolo:
                             <asp:Label ID="TitoloLabel" runat="server" Text='<%# Eval("Titolo") %>' />
-                            <br />Nome:
+                            <br />
+                            Nome:
                             <asp:Label ID="NomeLabel" runat="server" Text='<%# Eval("Nome") %>' />
-                            <br />Data:
+                            <br />
+                            Data:
                             <asp:Label ID="DataLabel" runat="server" Text='<%# Eval("Data") %>' />
-                            <br />Ora:
+                            <br />
+                            Ora:
                             <asp:Label ID="OraLabel" runat="server" Text='<%# Eval("Ora") %>' />
-                            <br />GiornoDellaSettimana:
+                            <br />
+                            GiornoDellaSettimana:
                             <asp:Label ID="GiornoDellaSettimanaLabel" runat="server" Text='<%# Eval("GiornoDellaSettimana") %>' />
-                            <br />Finale:
+                            <br />
+                            Finale:
                             <asp:Label ID="FinaleLabel" runat="server" Text='<%# Eval("Finale") %>' />
                             <br />
                             <asp:CheckBox ID="Cento_per_centoCheckBox" runat="server" Checked='<%# Eval("Cento_per_cento") %>' Enabled="false" Text="Cento_per_cento" />
-                            <br />Note:
+                            <br />
+                            Note:
                             <asp:Label ID="NoteLabel" runat="server" Text='<%# Eval("Note") %>' />
-                            <br />Codice:
+                            <br />
+                            Codice:
                             <asp:Label ID="CodiceLabel" runat="server" Text='<%# Eval("Codice") %>' />
                             <br />
                         </td>
@@ -293,35 +492,42 @@
                         <table runat="server">
                             <tr runat="server">
                                 <td runat="server">
-                                    <table id="groupPlaceholderContainer" runat="server" border="1" style="background-color: #FFFFFF;border-collapse: collapse;border-color: #999999;border-style:none;border-width:1px;font-family: Verdana, Arial, Helvetica, sans-serif;">
+                                    <table id="groupPlaceholderContainer" runat="server" border="1" style="background-color: #FFFFFF; border-collapse: collapse; border-color: #999999; border-style: none; border-width: 1px; font-family: Verdana, Arial, Helvetica, sans-serif;">
                                         <tr id="groupPlaceholder" runat="server">
                                         </tr>
                                     </table>
                                 </td>
                             </tr>
                             <tr runat="server">
-                                <td runat="server" style="text-align: center;background-color: #5D7B9D;font-family: Verdana, Arial, Helvetica, sans-serif;color: #FFFFFF"></td>
+                                <td runat="server" style="text-align: center; background-color: #5D7B9D; font-family: Verdana, Arial, Helvetica, sans-serif; color: #FFFFFF"></td>
                             </tr>
                         </table>
                     </LayoutTemplate>
                     <SelectedItemTemplate>
-                        <td runat="server" style="background-color: #E2DED6;font-weight: bold;color: #333333;">Titolo:
+                        <td runat="server" style="background-color: #E2DED6; font-weight: bold; color: #333333;">Titolo:
                             <asp:Label ID="TitoloLabel" runat="server" Text='<%# Eval("Titolo") %>' />
-                            <br />Nome:
+                            <br />
+                            Nome:
                             <asp:Label ID="NomeLabel" runat="server" Text='<%# Eval("Nome") %>' />
-                            <br />Data:
+                            <br />
+                            Data:
                             <asp:Label ID="DataLabel" runat="server" Text='<%# Eval("Data") %>' />
-                            <br />Ora:
+                            <br />
+                            Ora:
                             <asp:Label ID="OraLabel" runat="server" Text='<%# Eval("Ora") %>' />
-                            <br />GiornoDellaSettimana:
+                            <br />
+                            GiornoDellaSettimana:
                             <asp:Label ID="GiornoDellaSettimanaLabel" runat="server" Text='<%# Eval("GiornoDellaSettimana") %>' />
-                            <br />Finale:
+                            <br />
+                            Finale:
                             <asp:Label ID="FinaleLabel" runat="server" Text='<%# Eval("Finale") %>' />
                             <br />
                             <asp:CheckBox ID="Cento_per_centoCheckBox" runat="server" Checked='<%# Eval("Cento_per_cento") %>' Enabled="false" Text="Cento_per_cento" />
-                            <br />Note:
+                            <br />
+                            Note:
                             <asp:Label ID="NoteLabel" runat="server" Text='<%# Eval("Note") %>' />
-                            <br />Codice:
+                            <br />
+                            Codice:
                             <asp:Label ID="CodiceLabel" runat="server" Text='<%# Eval("Codice") %>' />
                             <br />
                         </td>
@@ -330,7 +536,6 @@
             </div>
 
         </div>
-
     </main>
 </asp:Content>
 
